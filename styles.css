@@ -1,0 +1,17 @@
+@import url("variables.css");
+@import url("./html/action-buttons/aside-action-buttons/aside-action-button-hide.css");
+@import url("./html/action-buttons/aside-action-buttons/aside-action-button-show.css");
+@import url("./html/action-buttons/nav-action-buttons/nav-action-button-done.css");
+@import url("./html/action-buttons/nav-action-buttons/nav-action-button-open.css");
+@import url("./html/action-buttons/nav-action-buttons/nav-action-button-new.css");
+@import url("./html/components/footer/footer.css");
+@import url("./html/components/nav/nav.css");
+@import url("./html/components/aside/aside.css");
+@import url("./html/components/body/body.css");
+@import url("./html/components/task/task.css");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
