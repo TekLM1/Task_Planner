@@ -4,11 +4,11 @@
 @import url("./html/action-buttons/nav-action-buttons/nav-action-button-done.css");
 @import url("./html/action-buttons/nav-action-buttons/nav-action-button-open.css");
 @import url("./html/action-buttons/nav-action-buttons/nav-action-button-new.css");
-@import url("./html/components/footer/footer.css");
-@import url("./html/components/nav/nav.css");
-@import url("./html/components/aside/aside.css");
-@import url("./html/components/body/body.css");
-@import url("./html/components/task/task.css");
+@import url("./html/footer/footer.css");
+@import url("./html/nav/nav.css");
+@import url("./html/aside/aside.css");
+@import url("./html/body/body.css");
+@import url("./html/task/task.css");
 
 * {
     margin: 0;
