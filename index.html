@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Planner</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Task Planner</h1>
-      <nav>
-        <button onclick="filterTasks('open')">Offene Tasks</button>
-        <button onclick="filterTasks('done')">Abgeschlossene Tasks</button>
-        <button onclick="newTask()">Neuer Task</button>
-      </nav>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Planner</title>
 
-    <section class="task-list" id="taskList">
-      <!-- Dynamisch gefüllte Task Buttons -->
-    </section>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Task Planner</h1>
+        <nav>
+          <button onclick="filterTasks('open')">Offene Tasks</button>
+          <button onclick="filterTasks('done')">Abgeschlossene Tasks</button>
+          <button onclick="newTask()">Neuer Task</button>
+        </nav>
+      </header>
 
-    <section class="task-details">
-      <!-- Dynamisch gewählte Taskdetails -->
-      <h2>[Kein Task ausgewählt]</h2>
-    </section>
-  </div>
+      <section class="task-list" id="taskList">
+        <!-- Dynamisch gefüllte Task Buttons -->
+      </section>
 
-  <script src="script.js"></script>
-</body>
+      <section class="task-details">
+        <!-- Dynamisch gewählte Taskdetails -->
+        <h2>[Kein Task ausgewählt]</h2>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
 </html>
