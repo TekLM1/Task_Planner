@@ -1,0 +1,20 @@
+.aside-action-button {
+  position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background-color: var(--aside-action-button-background-color);
+        color: var(--aside-action-button-color);
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        z-index: 1000;
+        transition: background 0.2s;
+}
+
+.aside-action-button:hover {
+        background-color: var(--aside-action-button-background-color);
+}
+
