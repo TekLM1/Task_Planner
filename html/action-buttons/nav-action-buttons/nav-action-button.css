@@ -18,11 +18,11 @@
 }
 
 .nav-action-button:hover {
-  background-color: #666;
+  background-color: var(--hover-background-color);
 }
 
 /* Mobile: Button-Leiste komplett ausblenden */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .navbar-rechts {
     display: none;
   }
