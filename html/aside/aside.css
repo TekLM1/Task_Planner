@@ -42,6 +42,7 @@
   display: none;
 }
 
+
 /* Sobald der Bildschirm größer als 600px ist → sichtbar */
 @media (min-width: 600px) {
   .hidden-mobile {
