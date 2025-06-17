@@ -44,7 +44,7 @@
 
 
 /* Sobald der Bildschirm größer als 645px ist → sichtbar */
-@media (min-width: 645px) {
+@media (min-width: 650px) {
   .hidden-mobile {
     display: block;
   }
