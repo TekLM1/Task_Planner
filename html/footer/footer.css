@@ -1,0 +1,54 @@
+.site-footer {
+  background-color: var(--main-background-color);
+  color: var(--main-font-color);
+  padding: 1rem;
+  text-align: center;
+  font-family: var(--main-font);
+  font-size: 0.9rem;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer-content span {
+  position: relative;
+  cursor: default;
+}
+
+.contact {
+  cursor: help;
+}
+
+.tooltip {
+  visibility: hidden;
+  background-color: var(--hover-background-color);
+  color: var(--main-font-color);
+  text-align: center;
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  z-index: 10;
+}
+
+.contact:hover .tooltip {
+  visibility: visible;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+  .footer-content {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

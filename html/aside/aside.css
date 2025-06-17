@@ -1,12 +1,12 @@
 .task-aside {
-  background-color: #1e1e1e;
-  color: #f1f1f1;
+  background-color: var(--main-background-color);
+  color: var(--main-font-color);
   width: 320px;
   height: 100vh;
   overflow-y: auto;
   padding: 1rem;
   box-sizing: border-box;
-  font-family: sans-serif;
+  font-family: var(--main-font);
   box-shadow: 2px 0 6px rgba(0, 0, 0, 0.5);
   display: block;
 }
@@ -24,7 +24,7 @@
 }
 
 .task-card:hover {
-  background-color: #353535;
+  background-color: var(--hover-background-color);
   transform: scale(1.01);
 }
 
@@ -42,8 +42,8 @@
   display: none;
 }
 
-/* Sobald der Bildschirm größer als 768px ist → sichtbar */
-@media (min-width: 768px) {
+/* Sobald der Bildschirm größer als 600px ist → sichtbar */
+@media (min-width: 600px) {
   .hidden-mobile {
     display: block;
   }
