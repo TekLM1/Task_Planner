@@ -19,7 +19,7 @@
         background-color: var(--hover-background-color);
 }
 
-@media (min-width: 600px) {
+@media (min-width: 645px) {
     .hidden-desktop {
         display: none;
     }

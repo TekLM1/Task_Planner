@@ -2,8 +2,8 @@
 .navbar-rechts {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 0.5rem;
+  padding: 0.5rem;
 }
 
 /* Buttons gestalten */
@@ -11,7 +11,7 @@
   background-color: var(--second-background-color);
   color: var(--main-font-color);
   font-family: var(--main-font);
-  padding: 0.5rem 1rem;
+  padding: 0.3rem 0.5rem;
   text-decoration: none;
   border-radius: 6px;
   transition: background-color 0.3s ease;
@@ -22,7 +22,7 @@
 }
 
 /* Mobile: Button-Leiste komplett ausblenden */
-@media (max-width: 600px) {
+@media (max-width: 645px) {
   .navbar-rechts {
     display: none;
   }

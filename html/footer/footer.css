@@ -46,7 +46,7 @@
 }
 
 /* Mobile responsive */
-@media (max-width: 600px) {
+@media (max-width: 645px) {
   .footer-content {
     flex-direction: column;
     gap: 0.5rem;
