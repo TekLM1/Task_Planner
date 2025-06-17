@@ -1,0 +1,29 @@
+/* Rechtsbündige Button-Leiste */
+.navbar-rechts {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Buttons gestalten */
+.nav-action-button {
+  background-color: var(--second-background-color);
+  color: var(--main-font-color);
+  font-family: var(--main-font);
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.nav-action-button:hover {
+  background-color: #666;
+}
+
+/* Mobile: Button-Leiste komplett ausblenden */
+@media (max-width: 768px) {
+  .navbar-rechts {
+    display: none;
+  }
+}
