@@ -1,13 +1,14 @@
 .aside-action-button {
-  position: fixed;
+        position: fixed;
         bottom: 20px;
         left: 20px;
         background-color: var(--aside-action-button-background-color);
-        color: var(--aside-action-button-color);
+        color: var(--main-font-color);
         border: none;
         border-radius: 8px;
         padding: 12px 24px;
         font-size: 16px;
+        font-family: var(--main-font);
         cursor: pointer;
         box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         z-index: 1000;
@@ -15,6 +16,16 @@
 }
 
 .aside-action-button:hover {
-        background-color: var(--aside-action-button-background-color);
+        background-color: var(--hover-background-color);
 }
+
+
+
+@media (min-width: 900px) {
+    .hidden-desktop {
+        display: none;
+    }
+}
+
+
 
