@@ -2,8 +2,8 @@
   position: fixed;
         bottom: 20px;
         left: 20px;
-        background-color: var(--aside-action-button-background-color);
-        color: var(--aside-action-button-color);
+        background-color: var(--second-background-color);
+        color: var(--main-font-color);
         border: none;
         border-radius: 8px;
         padding: 12px 24px;
@@ -15,6 +15,6 @@
 }
 
 .aside-action-button:hover {
-        background-color: var(--aside-action-button-background-color);
+        background-color: var(--hover-background-color);
 }
 
