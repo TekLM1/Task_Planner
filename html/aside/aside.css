@@ -12,7 +12,7 @@
 }
 
 .task-card {
-  background-color: #2a2a2a;
+  background-color: var(--task-card-background-color);
   border-left: 4px solid #3a9efd;
   border-radius: 6px;
   padding: 0.75rem 1rem;
