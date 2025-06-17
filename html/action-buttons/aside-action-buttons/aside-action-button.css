@@ -2,11 +2,7 @@
         position: fixed;
         bottom: 20px;
         left: 20px;
-<<<<<<< HEAD
-        background-color: var(--aside-action-button-background-color);
-=======
         background-color: var(--second-background-color);
->>>>>>> ba3cbc6469bd434b7bb37cf50fae074e22bc5682
         color: var(--main-font-color);
         border: none;
         border-radius: 8px;
@@ -23,9 +19,7 @@
         background-color: var(--hover-background-color);
 }
 
-
-
-@media (min-width: 900px) {
+@media (min-width: 600px) {
     .hidden-desktop {
         display: none;
     }
