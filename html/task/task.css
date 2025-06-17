@@ -96,7 +96,7 @@ aside.task-list {
 }
 
 /* Mobile-Optimierung */
-@media (max-width: 768px) {
+@media (max-width: 650px) {
   .task-container {
     grid-template-areas:
       "header"
