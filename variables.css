@@ -1,5 +1,5 @@
 :root {
-    --main-font: sans-serif;
+    --main-font: sans-serif, Arial, Helvetica;
     --main-font-color: #f1f1f1;
     --aside-action-button-background-color: #007bff;
     --aside-action-button-color: #78363681;
