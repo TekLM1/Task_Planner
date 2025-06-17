@@ -1,33 +1,53 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Task Planner</title>
+    <title>Document</title>
 
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="container">
-      <header>
-        <h1>Task Planner</h1>
-        <nav>
-          <button onclick="filterTasks('open')">Offene Tasks</button>
-          <button onclick="filterTasks('done')">Abgeschlossene Tasks</button>
-          <button onclick="newTask()">Neuer Task</button>
-        </nav>
-      </header>
+    <nav class="navbar">
+      <h1 class="navbar-title">Task Planner</h1>
+      <div class="burger" onclick="toggleMenu()">&#9776;</div>
+      <div class="navbar-rechts">
+        <a href="#" class="nav-action-button">Offene Tasks</a>
+        <a href="#" class="nav-action-button">Abgeschlossene Tasks</a>
+        <a href="#" class="nav-action-button">Neuer Task ➕ </a>
+      </div>
+    </nav>
 
-      <section class="task-list" id="taskList">
-        <!-- Dynamisch gefüllte Task Buttons -->
-      </section>
+    <aside class="task-aside hidden-mobile">
+      <div class="task-card">🎯 Aufgabe 1: Konzept erstellen</div>
+      <div class="task-card">📋 Aufgabe 2: Layout gestalten</div>
+      <div class="task-card">🛠️ Aufgabe 3: Code schreiben</div>
+      <div class="task-card">✅ Aufgabe 4: Test durchführen</div>
+      <div class="task-card">📦 Aufgabe 5: Deployment vorbereiten</div>
+      <div class="task-card">💡 Aufgabe 6: Feedback sammeln</div>
+      <div class="task-card">✍️ Aufgabe 7: Dokumentation schreiben</div>
+      <div class="task-card">🔄 Aufgabe 8: Iteration planen</div>
+      <div class="task-card">🚀 Aufgabe 9: Launch durchführen</div>
+      <div class="task-card">📊 Aufgabe 10: Ergebnisse analysieren</div>
+      <div class="task-card">🔍 Aufgabe 11: Nachbereitung</div>
+      <div class="task-card">📅 Aufgabe 12: Nächste Schritte planen</div>
+      <div class="task-card">📈 Aufgabe 13: Erfolg messen</div>
+      <div class="task-card">🔗 Aufgabe 14: Ressourcen aktualisieren</div>
+      <div class="task-card">📞 Aufgabe 15: Team-Meeting organisieren</div>
+    </aside>
 
-      <section class="task-details">
-        <!-- Dynamisch gewählte Taskdetails -->
-        <h2>[Kein Task ausgewählt]</h2>
-      </section>
-    </div>
+    <button class="aside-action-button hidden-desktop">Tasks anzeigen</button>
 
-    <script src="script.js"></script>
+    <footer class="site-footer">
+      <div class="footer-content">
+        <span>©Teko LULA</span>
+        <span>Disclaimer</span>
+        <span>Impressum</span>
+        <span class="contact">
+          Kontakt
+          <span class="tooltip">Do not contact us</span>
+        </span>
+      </div>
+    </footer>
   </body>
 </html>
