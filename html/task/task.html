@@ -1,12 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Detail</title>
     <link rel="stylesheet" href="../task/task.css" />
     <link rel="stylesheet" href="../../variables.css" />
-  </head>
-  <body></body>
+</head>
+<body>
+  <div class="task-container">
+    <main class="task-details">
+      <section class="task-info">
+        <h2>[Angewählter Task]</h2>
+        <p><strong>Titel:</strong> Benutzer erfassen</p>
+        <p><strong>Beschreibung:</strong> Neuer Mitarbeiter beginnt am 1. August und braucht ein NB</p>
+        <p><strong>Zeit Aufwand:</strong> 4h</p>
+        <p><strong>Verantwortlicher:</strong> Lernender 1</p>
+        <p><strong>Auditor:</strong> Berufsbildner 1</p>
+        <p><strong>Status:</strong> Offen / In Gange / Abgeschlossen</p>
+        <p><strong>Anhang:</strong> -</p>
+      </section>
+
+      <section class="task-actions">
+        <button>Editieren</button>
+        <button>Status ändern</button>
+        <button>Löschen</button>
+      </section>
+
+      <section class="task-comment">
+        <h3>Kommentar zum Task</h3>
+        <textarea placeholder="Kommentar eingeben..."></textarea>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function toggleTaskList() {
+      document.getElementById("taskList").classList.toggle("open");
+    }
+  </script>
+</body>
 </html>
