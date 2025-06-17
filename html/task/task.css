@@ -16,40 +16,6 @@ body {
   height: 100vh;
 }
 
-header.navbar {
-  grid-area: header;
-  background: #222;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-}
-
-.menu-toggle {
-  display: none;
-  background: none;
-  color: white;
-  font-size: 1.5rem;
-  border: none;
-}
-
-aside.task-list {
-  grid-area: aside;
-  background: #111;
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-}
-
-.task-list button {
-  margin-bottom: 0.5rem;
-  padding: 0.5rem;
-  background: #333;
-  color: white;
-  border: 1px solid white;
-  cursor: pointer;
-}
-
 .task-details {
   grid-area: main;
   padding: 2rem;
@@ -88,12 +54,6 @@ aside.task-list {
   resize: vertical;
 }
 
-.footer {
-  grid-area: footer;
-  background: #111;
-  padding: 1rem;
-  text-align: center;
-}
 
 /* Mobile-Optimierung */
 @media (max-width: 768px) {
@@ -105,43 +65,9 @@ aside.task-list {
     grid-template-columns: 1fr;
   }
 
-  aside.task-list {
-    display: none;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 60%;
-    background: #111;
-    z-index: 1000;
-    padding: 1rem;
-    overflow-y: auto;
-  }
-
-  aside.task-list.open {
-    display: block;
-  }
 
   .menu-toggle {
     display: block;
   }
 
-  .show-tasks {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid white;
-    padding: 0.6rem 1rem;
-    border-radius: 12px;
-    backdrop-filter: blur(5px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    z-index: 1000;
-  }
-
-  .hide-tasks {
-    display: block;
-    margin-top: 1rem;
-  }
 }
