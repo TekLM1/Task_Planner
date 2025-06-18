@@ -1,3 +1,118 @@
+const tasks = [
+  {
+    id: 1,
+    titel: "Konzept erstellen",
+    beschreibung: "Grundkonzept für das Projekt entwerfen.",
+    zeit: "2h",
+    verantwortlich: "Max Mustermann",
+    auditor: "Lars",
+    status: "Offen"
+  },
+  {
+    id: 2,
+    titel: "Layout gestalten",
+    beschreibung: "Optische Struktur festlegen.",
+    zeit: "1.5h",
+    verantwortlich: "Lena Beispiel",
+    auditor: "Lars",
+    status: "In Arbeit"
+  }
+];
+
+function renderTaskList() {
+  const taskList = document.getElementById("task-list");
+  taskList.innerHTML = "";
+
+  tasks.forEach(task => {
+    const card = document.createElement("div");
+    card.className = "task-card";
+    card.textContent = `📝 ${task.titel || "(Unbenannter Task)"}`;
+    card.dataset.id = task.id;
+
+    card.addEventListener("click", () => {
+      showTaskDetail(task);
+    });
+
+    if (document.querySelector(".task-info h2")?.textContent?.includes(task.titel)) {
+      card.classList.add("active");
+    }
+
+    taskList.appendChild(card);
+  });
+}
+
+function showTaskDetail(task) {
+  const container = document.querySelector(".task-info");
+  if (!container) return;
+
+  container.innerHTML = `
+    <h2>[<input type="text" value="${task.titel}" id="edit-titel" />]</h2>
+    <p><strong>Beschreibung:</strong><br>
+      <textarea id="edit-beschreibung">${task.beschreibung}</textarea>
+    </p>
+    <p><strong>Zeit Aufwand:</strong>
+      <input type="text" value="${task.zeit}" id="edit-zeit" />
+    </p>
+    <p><strong>Verantwortlicher:</strong>
+      <input type="text" value="${task.verantwortlich}" id="edit-verantwortlich" />
+    </p>
+    <p><strong>Auditor:</strong>
+      <input type="text" value="${task.auditor}" id="edit-auditor" />
+    </p>
+    <p><strong>Status:</strong>
+      <input type="text" value="${task.status}" id="edit-status" />
+    </p>
+  `;
+
+  document.getElementById("edit-titel").addEventListener("input", e => {
+    task.titel = e.target.value;
+    renderTaskList();
+  });
+
+  document.getElementById("edit-beschreibung").addEventListener("input", e => task.beschreibung = e.target.value);
+  document.getElementById("edit-zeit").addEventListener("input", e => task.zeit = e.target.value);
+  document.getElementById("edit-verantwortlich").addEventListener("input", e => task.verantwortlich = e.target.value);
+  document.getElementById("edit-auditor").addEventListener("input", e => task.auditor = e.target.value);
+  document.getElementById("edit-status").addEventListener("input", e => task.status = e.target.value);
+}
+
+function createNewTask() {
+  const newTask = {
+    id: Date.now(),
+    titel: "",
+    beschreibung: "",
+    zeit: "",
+    verantwortlich: "",
+    auditor: "",
+    status: ""
+  };
+
+  tasks.push(newTask);
+  renderTaskList();
+  showTaskDetail(newTask);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  renderTaskList();
+  showTaskDetail(tasks[0]);
+
+  const newTaskButton = document.getElementById("new-task-button");
+  if (newTaskButton) {
+    newTaskButton.addEventListener("click", e => {
+      e.preventDefault();
+      createNewTask();
+    });
+  }
+});
+
+
+
+
+
+
+
+
+/*
 class Note {
   constructor(id, text) {
     this.id = id;
@@ -285,3 +400,4 @@ const testHttp = () => {
 };
 
 testHttp();
+*/

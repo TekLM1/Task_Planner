@@ -6,20 +6,25 @@ body {
 }
 
 .task-container {
-  display: grid;
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  /* display: grid;
   grid-template-areas:
     "header header"
     "aside main"
     "footer footer";
   grid-template-columns: 200px 1fr;
   grid-template-rows: auto 1fr auto;
-  height: 100vh;
+  height: 100vh; */
 }
 
 .task-details {
-  grid-area: main;
-  padding: 2rem;
-  overflow-y: auto;
+    flex: 1;
+  background-color: var(--main-background-color);
+  padding: 20px;
+  border-radius: 12px;
+  color: var(--main-font-color);
 }
 
 .task-info p {
@@ -52,6 +57,11 @@ body {
   color: white;
   border: 1px solid white;
   resize: vertical;
+}
+
+.task-card.active {
+  background-color: #4a90e2;
+  color: white;
 }
 
 

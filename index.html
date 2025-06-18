@@ -14,11 +14,15 @@
       <div class="navbar-rechts">
         <a href="#" class="nav-action-button">Offene Tasks</a>
         <a href="#" class="nav-action-button">Abgeschlossene Tasks</a>
-        <a href="#" class="nav-action-button">Neuer Task ➕ </a>
+        <a href="#" class="nav-action-button" id="new-task-button">Neuer Task ➕ </a>
       </div>
     </nav>
 
-    <aside class="task-aside hidden-mobile">
+
+    <div class="task-container">
+
+      <aside class="task-aside hidden-mobile">
+      <!--
       <div class="task-card">🎯 Aufgabe 1: Konzept erstellen</div>
       <div class="task-card">📋 Aufgabe 2: Layout gestalten</div>
       <div class="task-card">🛠️ Aufgabe 3: Code schreiben</div>
@@ -34,7 +38,39 @@
       <div class="task-card">📈 Aufgabe 13: Erfolg messen</div>
       <div class="task-card">🔗 Aufgabe 14: Ressourcen aktualisieren</div>
       <div class="task-card">📞 Aufgabe 15: Team-Meeting organisieren</div>
+    -->
     </aside>
+      <main class="task-details">
+        <section class="task-info">
+          <h2>[Angewählter Task]</h2>
+          <p><strong>Titel:</strong> </p>
+          <p>
+            <strong>Beschreibung:</strong>
+          </p>
+          <p><strong >Zeit Aufwand:</strong> </p>
+          <p><strong>Verantwortlicher:</strong></p>
+          <p><strong>Auditor:</strong>  1</p>
+          <p><strong>Status:</strong></p>
+        </section>
+
+        <section class="task-actions">
+          <button>Editieren</button>
+          <button>Status ändern</button>
+          <button>Löschen</button>
+        </section>
+
+        <section class="task-comment">
+          <h3>Kommentar zum Task</h3>
+          <textarea placeholder="Kommentar eingeben..."></textarea>
+        </section>
+      </main>
+
+  
+    </div>
+
+    </div>
+
+    
 
     <button class="aside-action-button hidden-desktop">Tasks anzeigen</button>
 
@@ -49,5 +85,6 @@
         </span>
       </div>
     </footer>
+    <script src="js/index.js"></script>
   </body>
 </html>
