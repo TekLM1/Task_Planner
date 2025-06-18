@@ -1,23 +1,5 @@
-const tasks = [
-  {
-    id: 1,
-    titel: "Konzept erstellen",
-    beschreibung: "Grundkonzept für das Projekt entwerfen.",
-    zeit: "2h",
-    verantwortlich: "Max Mustermann",
-    auditor: "Lars",
-    status: "Offen"
-  },
-  {
-    id: 2,
-    titel: "Layout gestalten",
-    beschreibung: "Optische Struktur festlegen.",
-    zeit: "1.5h",
-    verantwortlich: "Lena Beispiel",
-    auditor: "Lars",
-    status: "In Arbeit"
-  }
-];
+const tasks = [];
+let selectedTask = null;
 
 function renderTaskList() {
   const taskList = document.getElementById("task-list");
@@ -33,7 +15,8 @@ function renderTaskList() {
       showTaskDetail(task);
     });
 
-    if (document.querySelector(".task-info h2")?.textContent?.includes(task.titel)) {
+    // Aktiven Task visuell markieren
+    if (selectedTask && selectedTask.id === task.id) {
       card.classList.add("active");
     }
 
@@ -42,38 +25,61 @@ function renderTaskList() {
 }
 
 function showTaskDetail(task) {
-  const container = document.querySelector(".task-info");
-  if (!container) return;
+  selectedTask = task;
 
-  container.innerHTML = `
+  document.querySelector(".task-info").innerHTML = `
     <h2>[<input type="text" value="${task.titel}" id="edit-titel" />]</h2>
-    <p><strong>Beschreibung:</strong><br>
-      <textarea id="edit-beschreibung">${task.beschreibung}</textarea>
-    </p>
-    <p><strong>Zeit Aufwand:</strong>
-      <input type="text" value="${task.zeit}" id="edit-zeit" />
-    </p>
-    <p><strong>Verantwortlicher:</strong>
-      <input type="text" value="${task.verantwortlich}" id="edit-verantwortlich" />
-    </p>
-    <p><strong>Auditor:</strong>
-      <input type="text" value="${task.auditor}" id="edit-auditor" />
-    </p>
-    <p><strong>Status:</strong>
-      <input type="text" value="${task.status}" id="edit-status" />
-    </p>
+    <p><strong>Beschreibung:</strong><br><textarea id="edit-beschreibung">${task.beschreibung}</textarea></p>
+    <p><strong>Zeit Aufwand:</strong><input type="text" value="${task.zeit}" id="edit-zeit" /></p>
+    <p><strong>Verantwortlicher:</strong><input type="text" value="${task.verantwortlich}" id="edit-verantwortlich" /></p>
+    <p><strong>Auditor:</strong><input type="text" value="${task.auditor}" id="edit-auditor" /></p>
+    <p><strong>Status:</strong><input type="text" value="${task.status}" id="edit-status" disabled /></p>
   `;
 
+  // Event Listener für Inputs
   document.getElementById("edit-titel").addEventListener("input", e => {
     task.titel = e.target.value;
     renderTaskList();
   });
-
   document.getElementById("edit-beschreibung").addEventListener("input", e => task.beschreibung = e.target.value);
   document.getElementById("edit-zeit").addEventListener("input", e => task.zeit = e.target.value);
   document.getElementById("edit-verantwortlich").addEventListener("input", e => task.verantwortlich = e.target.value);
   document.getElementById("edit-auditor").addEventListener("input", e => task.auditor = e.target.value);
-  document.getElementById("edit-status").addEventListener("input", e => task.status = e.target.value);
+
+  // Button-Events an deine Buttons binden
+  const [btnEdit, btnStatus, btnDelete] = document.querySelectorAll(".task-actions button");
+
+  if (btnEdit) {
+    btnEdit.onclick = () => {
+      alert("Aktueller Task gespeichert.");
+    };
+  }
+
+  if (btnStatus) {
+    btnStatus.onclick = () => {
+      task.status = task.status === "Offen" ? "Erledigt" : "Offen";
+      document.getElementById("edit-status").value = task.status;
+    };
+  }
+
+  if (btnDelete) {
+    btnDelete.onclick = () => {
+      const index = tasks.findIndex(t => t.id === task.id);
+      if (index !== -1) {
+        tasks.splice(index, 1);
+        selectedTask = null;
+        renderTaskList();
+        document.querySelector(".task-info").innerHTML = "<h2>[Kein Task ausgewählt]</h2>";
+      }
+    };
+  }
+
+  // Kommentar abspeichern
+  const textarea = document.querySelector(".task-comment textarea");
+  textarea.value = task.comment || "";
+  textarea.oninput = e => {
+    task.comment = e.target.value;
+  };
 }
 
 function createNewTask() {
@@ -84,26 +90,25 @@ function createNewTask() {
     zeit: "",
     verantwortlich: "",
     auditor: "",
-    status: ""
+    status: "Offen",
+    comment: ""
   };
-
   tasks.push(newTask);
   renderTaskList();
   showTaskDetail(newTask);
 }
 
+// Initialisierung nach Laden der Seite
 window.addEventListener("DOMContentLoaded", () => {
-  renderTaskList();
-  showTaskDetail(tasks[0]);
+  document.getElementById("new-task-button").addEventListener("click", e => {
+    e.preventDefault();
+    createNewTask();
+  });
 
-  const newTaskButton = document.getElementById("new-task-button");
-  if (newTaskButton) {
-    newTaskButton.addEventListener("click", e => {
-      e.preventDefault();
-      createNewTask();
-    });
-  }
+  renderTaskList();
 });
+
+
 
 
 
