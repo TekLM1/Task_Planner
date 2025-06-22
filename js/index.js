@@ -1,11 +1,19 @@
 const tasks = [];
 let selectedTask = null;
 
+let currentFilter = "Alle"; // Neu hinzugefügt
+
 function renderTaskList() {
   const taskList = document.getElementById("task-list");
   taskList.innerHTML = "";
 
-  tasks.forEach(task => {
+  const filteredTasks = tasks.filter(task => {
+    if (currentFilter === "Offen") return task.status === "Offen";
+    if (currentFilter === "Erledigt") return task.status === "Erledigt";
+    return true; // "Alle"
+  });
+
+  filteredTasks.forEach(task => {
     const card = document.createElement("div");
     card.className = "task-card";
     card.textContent = `📝 ${task.titel || "(Unbenannter Task)"}`;
@@ -15,7 +23,6 @@ function renderTaskList() {
       showTaskDetail(task);
     });
 
-    // Aktiven Task visuell markieren
     if (selectedTask && selectedTask.id === task.id) {
       card.classList.add("active");
     }
@@ -106,9 +113,20 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   renderTaskList();
+    document.getElementById("show-open-tasks").addEventListener("click", e => {
+    e.preventDefault();
+    currentFilter = "Offen";
+    renderTaskList();
+  });
+
+  document.getElementById("show-done-tasks").addEventListener("click", e => {
+    e.preventDefault();
+    currentFilter = "Erledigt";
+    renderTaskList();
+  });
 });
 
-
+// Burger Menu Toggle
 function toggleMenu() {
   const menu = document.getElementById("burger-menu");
   if (menu) {
@@ -116,6 +134,7 @@ function toggleMenu() {
   }
 }
 
+// Button Listener für Burger Menu
 const asideToggleBtn = document.querySelector(".aside-action-button");
 if (asideToggleBtn) {
   asideToggleBtn.addEventListener("click", () => {
