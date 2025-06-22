@@ -106,6 +106,12 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 
+function toggleMenu() {
+  const menu = document.getElementById("burger-menu");
+  if (menu) {
+    menu.classList.toggle("show");
+  }
+}
 
 
 

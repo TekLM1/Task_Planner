@@ -10,14 +10,15 @@
   <body>
     <nav class="navbar">
       <h1 class="navbar-title">Task Planner</h1>
-      <div class="burger" onclick="toggleMenu()">&#9776;</div>
-      <div class="navbar-rechts">
-        <a href="#" class="nav-action-button">Offene Tasks</a>
-        <a href="#" class="nav-action-button">Abgeschlossene Tasks</a>
-        <a href="#" class="nav-action-button" id="new-task-button">Neuer Task ➕ </a>
+      <div class="navbar-actions">
+        <div class="burger" onclick="toggleMenu()">&#9776;</div>
+        <div class="navbar-dropdown" id="burger-menu">
+          <a href="#" class="nav-action-button" id="show-open-tasks">Offene Tasks</a>
+          <a href="#" class="nav-action-button" id="show-done-tasks">Abgeschlossene Tasks</a>
+          <a href="#" class="nav-action-button" id="new-task-button">Neuer Task ➕</a>
+        </div>
       </div>
     </nav>
-
 
     <div class="task-container">
 
@@ -64,16 +65,9 @@
           <textarea placeholder="Kommentar eingeben..."></textarea>
         </section>
       </main>
-
-  
     </div>
-
     </div>
-
-    
-
     <button class="aside-action-button hidden-desktop">Tasks anzeigen</button>
-
     <footer class="site-footer">
       <div class="footer-content">
         <span>©Teko LULA</span>

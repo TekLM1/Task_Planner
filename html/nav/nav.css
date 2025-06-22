@@ -6,6 +6,7 @@
   color: var(--main-font-color);
   padding: 10px 20px;
   font-family: var(--main-font);
+  position: relative;
 }
 
 .navbar-title {
@@ -27,8 +28,40 @@
   transform: scale(1.1);
 }
 
+.navbar-dropdown {
+  display: none;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--main-background-color);
+  padding: 0.5rem;
+  z-index: 1000;
+  gap: 0.3rem;
+}
+
+.navbar-dropdown.show {
+  display: flex;
+}
+
 @media (max-width: 650px) {
   .burger {
     display: block;
+  }
+}
+
+@media (min-width: 651px) {
+  .burger {
+    display: none;
+  }
+
+  .navbar-dropdown {
+    display: flex !important;
+    position: static;
+    flex-direction: row;
+    gap: 0.5rem;
+    border: none;
+    padding: 0;
+    margin-left: 1rem;
   }
 }
