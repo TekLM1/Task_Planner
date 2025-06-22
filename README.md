@@ -18,16 +18,7 @@ Ein einfacher webbasierten Task-Manager, der speziell für Lernende entwickelt w
 - **JavaScript (Vanilla)**
 - Keine externen Frameworks oder Libraries notwendig
 
-## 📁 Projektstruktur
 
-project-root/
-│
-├── index.html # Hauptseite
-├── styles.css # Globale CSS-Datei
-├── variables.css # Farb- und Schriftvariablen
-├── index.js # Hauptlogik für Aufgabenverwaltung
-├── html/ # Modularisierte CSS-Komponenten
-│ └── ... # (z. B. nav.css, task.css etc.)
 
 ## 🧑‍💻 Für Entwickler
 
