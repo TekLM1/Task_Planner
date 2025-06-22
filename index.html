@@ -10,19 +10,20 @@
   <body>
     <nav class="navbar">
       <h1 class="navbar-title">Task Planner</h1>
-      <div class="burger" onclick="toggleMenu()">&#9776;</div>
-      <div class="navbar-rechts">
-        <a href="#" class="nav-action-button">Offene Tasks</a>
-        <a href="#" class="nav-action-button">Abgeschlossene Tasks</a>
-        <a href="#" class="nav-action-button" id="new-task-button">Neuer Task ➕ </a>
+      <div class="navbar-actions">
+        <div class="burger" onclick="toggleMenu()">&#9776;</div>
+        <div class="navbar-dropdown" id="burger-menu">
+          <a href="#" class="nav-action-button" id="show-open-tasks">Offene Tasks</a>
+          <a href="#" class="nav-action-button" id="show-done-tasks">Abgeschlossene Tasks</a>
+          <a href="#" class="nav-action-button" id="new-task-button">Neuer Task ➕</a>
+        </div>
       </div>
     </nav>
 
-
     <div class="task-container">
 
-      <aside class="task-aside hidden-mobile" id="task-list">
-      <!--
+      <aside class="task-aside hidden-mobile">
+    <!-- Task List
       <div class="task-card">🎯 Aufgabe 1: Konzept erstellen</div>
       <div class="task-card">📋 Aufgabe 2: Layout gestalten</div>
       <div class="task-card">🛠️ Aufgabe 3: Code schreiben</div>
@@ -38,11 +39,12 @@
       <div class="task-card">📈 Aufgabe 13: Erfolg messen</div>
       <div class="task-card">🔗 Aufgabe 14: Ressourcen aktualisieren</div>
       <div class="task-card">📞 Aufgabe 15: Team-Meeting organisieren</div>
-    -->
+      -->
     </aside>
       <main class="task-details">
         <section class="task-info">
-          <h2>[Angewählter Task]</h2>
+          <h2>[Angewählter Task]
+          </h2>
           <p><strong>Titel:</strong> </p>
           <p>
             <strong>Beschreibung:</strong>
@@ -64,16 +66,9 @@
           <textarea placeholder="Kommentar eingeben..."></textarea>
         </section>
       </main>
-
-  
     </div>
-
     </div>
-
-    
-
     <button class="aside-action-button hidden-desktop">Tasks anzeigen</button>
-
     <footer class="site-footer">
       <div class="footer-content">
         <span>©Teko LULA</span>

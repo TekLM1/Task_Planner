@@ -25,36 +25,43 @@ html, body {
 }
 
 .footer-content span {
-  position: relative;
-  cursor: default;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .contact {
   cursor: help;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .tooltip {
   visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
   background-color: var(--hover-background-color);
   color: var(--main-font-color);
   text-align: center;
   border-radius: 4px;
-  padding: 0.4rem 0.6rem;
+  padding: 0.3rem 0.5rem;
   position: absolute;
-  bottom: 150%;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  left: 150%;
+  transform: translateY(-50%);
   white-space: nowrap;
-  font-family: sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   z-index: 10;
+  pointer-events: none;
 }
 
 .contact:hover .tooltip {
   visibility: visible;
+  opacity: 1;
 }
 
-/* Mobile responsive */
 @media (max-width: 650px) {
   .footer-content {
     flex-direction: column;

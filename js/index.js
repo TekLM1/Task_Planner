@@ -109,8 +109,23 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 
+function toggleMenu() {
+  const menu = document.getElementById("burger-menu");
+  if (menu) {
+    menu.classList.toggle("show");
+  }
+}
 
+const asideToggleBtn = document.querySelector(".aside-action-button");
+if (asideToggleBtn) {
+  asideToggleBtn.addEventListener("click", () => {
+    const aside = document.querySelector(".task-aside");
+    if (!aside) return;
 
+    const isHidden = aside.classList.toggle("hidden-mobile");
+    asideToggleBtn.textContent = isHidden ? "Tasks anzeigen" : "Tasks verbergen";
+  });
+}
 
 
 
