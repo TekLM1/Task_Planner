@@ -1,7 +1,7 @@
 html, body {
   background-color: var(--main-background-color);
   background-size: cover;
-  height: 50vh;
+  height: 100vh;
   margin: 0;
   padding: 0;
 }
