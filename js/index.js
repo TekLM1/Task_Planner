@@ -98,7 +98,7 @@ function createNewTask() {
 
 function renderTaskFields(task, editable) {
   document.querySelector(".task-info").innerHTML = `
-    <h2>[<input type="text" value="${task.titel}" id="edit-titel" placeholder="Titel eingeben…" ${editable ? "" : "disabled"} />]</h2>
+    <h2><input type="text" value="${task.titel}" id="edit-titel" placeholder="Titel eingeben…" ${editable ? "" : "disabled"} /></h2>
     <p><strong>Beschreibung:</strong><br>
       <textarea id="edit-beschreibung" ${editable ? "" : "disabled"}>${task.beschreibung}</textarea>
     </p>
