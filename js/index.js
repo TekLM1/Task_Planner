@@ -169,6 +169,15 @@ if (asideToggleBtn) {
   });
 }
 
+function hideWelcome() {
+    const overlay = document.getElementById("welcome-overlay");
+    overlay.style.transition = "opacity 0.4s ease";
+    overlay.style.opacity = "0";
+    setTimeout(() => {
+      overlay.style.display = "none";
+    }, 400);
+  }
+
 
 
 
