@@ -1,5 +1,6 @@
 const tasks = [];
 let selectedTask = null;
+let isEditing = false; 
 
 let currentFilter = "Alle"; // Neu hinzugefügt
 
@@ -33,55 +34,44 @@ function renderTaskList() {
 
 function showTaskDetail(task) {
   selectedTask = task;
+  isEditing = false;
 
-  document.querySelector(".task-info").innerHTML = `
-    <h2>[<input type="text" value="${task.titel}" id="edit-titel" />]</h2>
-    <p><strong>Beschreibung:</strong><br><textarea id="edit-beschreibung">${task.beschreibung}</textarea></p>
-    <p><strong>Zeit Aufwand:</strong><input type="text" value="${task.zeit}" id="edit-zeit" /></p>
-    <p><strong>Verantwortlicher:</strong><input type="text" value="${task.verantwortlich}" id="edit-verantwortlich" /></p>
-    <p><strong>Auditor:</strong><input type="text" value="${task.auditor}" id="edit-auditor" /></p>
-    <p><strong>Status:</strong><input type="text" value="${task.status}" id="edit-status" disabled /></p>
-  `;
+  const infoSection = document.querySelector(".task-info");
+  const [editButton, statusButton, deleteButton] = document.querySelectorAll(".task-actions button");
 
-  // Event Listener für Inputs
-  document.getElementById("edit-titel").addEventListener("input", e => {
-    task.titel = e.target.value;
+  renderTaskFields(task, false); // zuerst Felder NICHT bearbeitbar
+
+  editButton.textContent = "Editieren";
+
+  editButton.onclick = () => {
+    isEditing = !isEditing;
+
+    if (isEditing) {
+      editButton.textContent = "Speichern";
+    } else {
+      editButton.textContent = "Editieren";
+    }
+
+    renderTaskFields(task, isEditing); // Felder sperren oder freischalten
+    renderTaskList(); // Liste neu laden
+  };
+
+  statusButton.onclick = () => {
+    task.status = task.status === "Offen" ? "Erledigt" : "Offen";
+    if (!isEditing) renderTaskFields(task, false);
     renderTaskList();
-  });
-  document.getElementById("edit-beschreibung").addEventListener("input", e => task.beschreibung = e.target.value);
-  document.getElementById("edit-zeit").addEventListener("input", e => task.zeit = e.target.value);
-  document.getElementById("edit-verantwortlich").addEventListener("input", e => task.verantwortlich = e.target.value);
-  document.getElementById("edit-auditor").addEventListener("input", e => task.auditor = e.target.value);
+  };
 
-  // Button-Events an deine Buttons binden
-  const [btnEdit, btnStatus, btnDelete] = document.querySelectorAll(".task-actions button");
+  deleteButton.onclick = () => {
+    const index = tasks.findIndex(t => t.id === task.id);
+    if (index !== -1) {
+      tasks.splice(index, 1);
+      selectedTask = null;
+      renderTaskList();
+      document.querySelector(".task-info").innerHTML = "<h2>[Kein Task ausgewählt]</h2>";
+    }
+  };
 
-  if (btnEdit) {
-    btnEdit.onclick = () => {
-      alert("Aktueller Task gespeichert.");
-    };
-  }
-
-  if (btnStatus) {
-    btnStatus.onclick = () => {
-      task.status = task.status === "Offen" ? "Erledigt" : "Offen";
-      document.getElementById("edit-status").value = task.status;
-    };
-  }
-
-  if (btnDelete) {
-    btnDelete.onclick = () => {
-      const index = tasks.findIndex(t => t.id === task.id);
-      if (index !== -1) {
-        tasks.splice(index, 1);
-        selectedTask = null;
-        renderTaskList();
-        document.querySelector(".task-info").innerHTML = "<h2>[Kein Task ausgewählt]</h2>";
-      }
-    };
-  }
-
-  // Kommentar abspeichern
   const textarea = document.querySelector(".task-comment textarea");
   textarea.value = task.comment || "";
   textarea.oninput = e => {
@@ -102,7 +92,40 @@ function createNewTask() {
   };
   tasks.push(newTask);
   renderTaskList();
+  isEditing = true;
   showTaskDetail(newTask);
+}
+
+function renderTaskFields(task, editable) {
+  document.querySelector(".task-info").innerHTML = `
+    <h2>[<input type="text" value="${task.titel}" id="edit-titel" placeholder="Titel eingeben…" ${editable ? "" : "disabled"} />]</h2>
+    <p><strong>Beschreibung:</strong><br>
+      <textarea id="edit-beschreibung" ${editable ? "" : "disabled"}>${task.beschreibung}</textarea>
+    </p>
+    <p><strong>Zeit Aufwand:</strong>
+      <input type="text" value="${task.zeit}" id="edit-zeit" ${editable ? "" : "disabled"} />
+    </p>
+    <p><strong>Verantwortlicher:</strong>
+      <input type="text" value="${task.verantwortlich}" id="edit-verantwortlich" ${editable ? "" : "disabled"} />
+    </p>
+    <p><strong>Auditor:</strong>
+      <input type="text" value="${task.auditor}" id="edit-auditor" ${editable ? "" : "disabled"} />
+    </p>
+    <p><strong>Status:</strong>
+      <input type="text" value="${task.status}" id="edit-status" disabled />
+    </p>
+  `;
+
+  if (editable) {
+    document.getElementById("edit-titel").addEventListener("input", e => {
+      task.titel = e.target.value;
+      renderTaskList();
+    });
+    document.getElementById("edit-beschreibung").addEventListener("input", e => task.beschreibung = e.target.value);
+    document.getElementById("edit-zeit").addEventListener("input", e => task.zeit = e.target.value);
+    document.getElementById("edit-verantwortlich").addEventListener("input", e => task.verantwortlich = e.target.value);
+    document.getElementById("edit-auditor").addEventListener("input", e => task.auditor = e.target.value);
+  }
 }
 
 // Initialisierung nach Laden der Seite

@@ -32,6 +32,17 @@ body {
   
 }
 
+.task-info input[disabled],
+.task-info textarea[disabled] {
+  background-color: transparent;
+  color: var(--main-font-color);
+  border: none;
+  outline: none;
+  resize: none;
+  pointer-events: none; /* verhindert Cursor & Klicks */
+  font-family: var(--main-font);
+}
+
 .task-actions {
   margin-top: 2rem;
   display: flex;
