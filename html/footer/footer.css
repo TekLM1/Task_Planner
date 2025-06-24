@@ -69,7 +69,7 @@ html, body {
 }
 .contact .hover-image {
   position: absolute;
-  bottom: 120%; /* oder top: 100% je nach gewünschter Position */
+  bottom: 120%;
   left: 100%;
   transform: translateX(10px);
   opacity: 0;
