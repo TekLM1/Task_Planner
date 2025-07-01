@@ -1,9 +1,9 @@
 .task-aside {
   width: 270px;
   min-width: 270px;
-  /*max-height: calc(100vh - 80px);*/
-  height: 100dvh;
-  max-height: 100dvh;
+  max-height: calc(100vh - 80px);
+  /*height: 100dvh;
+  max-height: 100dvh;*/
 
   overflow-y: auto;
   overflow-x: hidden;
