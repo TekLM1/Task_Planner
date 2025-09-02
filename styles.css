@@ -12,3 +12,67 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+/* ========== Modern Forms ========== */
+:root{
+  --radius: 12px;
+  --input-bg: color-mix(in oklab, var(--second-background-color) 88%, black 12%);
+  --input-border: color-mix(in oklab, var(--font-color) 20%, transparent);
+  --input-hover: color-mix(in oklab, var(--font-color) 40%, transparent);
+  --input-focus: var(--hover-background-color);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.12);
+}
+
+.task-info label{
+  display: grid;
+  gap: .4rem;
+  margin-block: .6rem;
+  font-size: .9rem;
+  color: color-mix(in oklab, var(--font-color) 82%, transparent);
+}
+
+.task-info input,
+.task-info textarea,
+.task-info select{
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius);
+  padding: .9rem 1rem;
+  font: inherit;
+  color: var(--font-color);
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease, background .2s;
+  box-shadow: var(--shadow-sm) inset;
+}
+
+.task-info input::placeholder,
+.task-info textarea::placeholder{ opacity:.65; }
+
+.task-info input:hover,
+.task-info textarea:hover,
+.task-info select:hover{ border-color: var(--input-hover); }
+
+.task-info input:focus,
+.task-info textarea:focus,
+.task-info select:focus{
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--input-focus) 35%, transparent);
+}
+
+.task-actions button{
+  border: 1px solid var(--input-border);
+  border-radius: calc(var(--radius) - 2px);
+  padding: .7rem 1rem;
+  background: var(--second-background-color);
+  color: var(--font-color);
+  box-shadow: var(--shadow-sm);
+  transition: transform .06s ease, background .15s ease, border-color .15s ease;
+}
+.task-actions button:hover{
+  background: var(--hover-background-color);
+  border-color: var(--input-hover);
+}
+.task-actions button:active{ transform: translateY(1px); }
