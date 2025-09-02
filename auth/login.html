@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login – Web-LuLa</title>
+  <link rel="stylesheet" href="../variables.css" />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    .auth-wrap{max-width:420px;margin:10vh auto;padding:2rem;background:var(--second-background-color);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+    .auth-wrap h1{margin-bottom:1rem}
+    .auth-wrap form{display:grid;gap:.8rem}
+    .auth-wrap button{margin-top:.6rem}
+  </style>
+</head>
+<body>
+  <div class="auth-wrap">
+    <h1>Login</h1>
+    <form id="login-form">
+      <label>E-Mail
+        <input type="email" name="email" required placeholder="name@example.com">
+      </label>
+      <label>Passwort
+        <input type="password" name="password" required>
+      </label>
+      <button type="submit">Einloggen</button>
+      <p>Noch kein Konto? <a href="./register.html">Registrieren</a></p>
+      <p id="err" style="color:#f77"></p>
+    </form>
+  </div>
+  <script src="./auth.js"></script>
+</body>
+</html>

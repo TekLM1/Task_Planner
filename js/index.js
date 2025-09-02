@@ -1,4 +1,42 @@
 const tasks = [];
+const API_BASE = 'http://localhost:3001/api';
+const USE_API = true;
+
+async function apiGetMe(){
+  const r = await fetch(`${API_BASE}/auth/me`, { credentials:'include' });
+  if (r.status === 401) return null;
+  return r.json();
+}
+async function apiLogout(){
+  await fetch(`${API_BASE}/auth/logout`, { method:'POST', credentials:'include' });
+}
+
+async function repoList(){
+  if (!USE_API) return window.tasks || [];
+  const r = await fetch(`${API_BASE}/tasks`, { credentials:'include' });
+  return r.json();
+}
+async function repoCreate(task){
+  if (!USE_API) return task;
+  const r = await fetch(`${API_BASE}/tasks`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    credentials:'include', body: JSON.stringify(task)
+  });
+  return r.json();
+}
+async function repoPatch(id, patch){
+  if (!USE_API) return patch;
+  const r = await fetch(`${API_BASE}/tasks/${id}`, {
+    method:'PATCH', headers:{'Content-Type':'application/json'},
+    credentials:'include', body: JSON.stringify(patch)
+  });
+  return r.json();
+}
+async function repoDelete(id){
+  if (!USE_API) return;
+  await fetch(`${API_BASE}/tasks/${id}`, { method:'DELETE', credentials:'include' });
+}
+
 let selectedTask = null;
 let isEditing = false; 
 
