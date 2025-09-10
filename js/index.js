@@ -1,6 +1,6 @@
-const tasks = [];
-const API_BASE = 'http://localhost:3001/api';
+let tasks = [];
 const USE_API = true;
+const API_BASE = 'http://localhost:3001/api';
 
 async function apiGetMe(){
   const r = await fetch(`${API_BASE}/auth/me`, { credentials:'include' });
@@ -167,25 +167,54 @@ function renderTaskFields(task, editable) {
 }
 
 // Initialisierung nach Laden der Seite
-window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("new-task-button").addEventListener("click", e => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1) Login-Check
+  const me = await apiGetMe();
+  if (!me) {
+    // nicht eingeloggt -> zuerst Login-Seite
+    location.href = './auth/login.html';
+    return; // wichtig: restlichen Code NICHT ausfuehren
+  }
+
+  // 2) Tasks laden (API)
+  try {
+    tasks = USE_API ? await repoList() : (window.tasks || []);
+  } catch (err) {
+    console.error('Tasks laden fehlgeschlagen:', err);
+    tasks = [];
+  }
+
+  // 3) Event-Listener binden
+  document.getElementById('new-task-button')?.addEventListener('click', (e) => {
     e.preventDefault();
     createNewTask();
   });
 
-  renderTaskList();
-    document.getElementById("show-open-tasks").addEventListener("click", e => {
+  document.getElementById('show-open-tasks')?.addEventListener('click', (e) => {
     e.preventDefault();
-    currentFilter = "Offen";
+    currentFilter = 'Offen';
     renderTaskList();
   });
 
-  document.getElementById("show-done-tasks").addEventListener("click", e => {
+  document.getElementById('show-done-tasks')?.addEventListener('click', (e) => {
     e.preventDefault();
-    currentFilter = "Erledigt";
+    currentFilter = 'Erledigt';
     renderTaskList();
   });
+
+  // (Optional) Mobile-Aside Toggle – besser hier binden:
+  const asideToggleBtn = document.querySelector('.aside-action-button');
+  asideToggleBtn?.addEventListener('click', () => {
+    const aside = document.querySelector('.task-aside');
+    if (!aside) return;
+    const isHidden = aside.classList.toggle('hidden-mobile');
+    asideToggleBtn.textContent = isHidden ? 'Tasks anzeigen' : 'Tasks verbergen';
+  });
+
+  // 4) Initial rendern
+  renderTaskList();
 });
+
 
 // Burger Menu Toggle
 function toggleMenu() {
