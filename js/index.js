@@ -212,16 +212,21 @@ function renderTaskFields(task, editable) {
   }
 }
 
-// Initialisierung nach Laden der Seite
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1) Login-Check
+  // Login-Check
   const me = await apiGetMe();
   if (!me) { location.href = './auth/login.html'; return; }
 
-  // 2) Tasks vom Server laden
-  tasks = (await repoList()).map(toViewModel);
+  // Tasks laden (Server -> UI-Model)
+  try {
+    const serverTasks = await repoList();
+    tasks = serverTasks.map(toViewModel);   // <-- wichtig
+  } catch (err) {
+    console.error('Tasks laden fehlgeschlagen:', err);
+    tasks = [];
+  }
 
-  // 3) Events binden
+  // Events
   document.getElementById('new-task-button')?.addEventListener('click', async (e) => {
     e.preventDefault();
     await createNewTask();
@@ -230,13 +235,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('show-open-tasks')?.addEventListener('click', (e) => {
     e.preventDefault(); currentFilter = 'Offen'; renderTaskList();
   });
+
   document.getElementById('show-done-tasks')?.addEventListener('click', (e) => {
     e.preventDefault(); currentFilter = 'Erledigt'; renderTaskList();
   });
 
-  // 4) Initial rendern
+  // Initial render
   renderTaskList();
 });
+
 
 
 
