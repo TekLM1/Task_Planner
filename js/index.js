@@ -2,6 +2,37 @@ let tasks = [];
 const USE_API = true;
 const API_BASE = 'http://localhost:3001/api';
 
+const STATUS_UI2API = { 'Offen':'offen', 'Erledigt':'erledigt', 'In Arbeit':'in_arbeit', 'Review':'review' };
+const STATUS_API2UI = { 'offen':'Offen', 'erledigt':'Erledigt', 'in_arbeit':'In Arbeit', 'review':'Review' };
+
+function toViewModel(s){ // Server -> UI
+  return {
+    id: s._id,
+    titel: s.title ?? '',
+    beschreibung: s.description ?? '',
+    zeit: s.effortMin ?? 0,
+    verantwortlich: s.assignee ?? '',
+    auditor: s.auditor ?? '',
+    status: STATUS_API2UI[s.status] || 'Offen',
+    comment: (s.comments && s.comments[0]?.text) || '',
+    createdAt: s.createdAt, updatedAt: s.updatedAt
+  };
+}
+
+function toApiModel(u){ // UI -> Server
+  const body = {
+    title: u.titel ?? '',
+    description: u.beschreibung ?? '',
+    effortMin: Number(u.zeit) || 0,
+    assignee: u.verantwortlich ?? '',
+    auditor: u.auditor ?? '',
+    status: STATUS_UI2API[u.status] || 'offen'
+  };
+  if (u.comment !== undefined) body.comments = u.comment ? [{ text: u.comment }] : [];
+  return body;
+}
+
+
 async function apiGetMe(){
   const r = await fetch(`${API_BASE}/auth/me`, { credentials:'include' });
   if (r.status === 401) return null;
@@ -170,50 +201,28 @@ function renderTaskFields(task, editable) {
 document.addEventListener('DOMContentLoaded', async () => {
   // 1) Login-Check
   const me = await apiGetMe();
-  if (!me) {
-    // nicht eingeloggt -> zuerst Login-Seite
-    location.href = './auth/login.html';
-    return; // wichtig: restlichen Code NICHT ausfuehren
-  }
+  if (!me) { location.href = './auth/login.html'; return; }
 
-  // 2) Tasks laden (API)
-  try {
-    tasks = USE_API ? await repoList() : (window.tasks || []);
-  } catch (err) {
-    console.error('Tasks laden fehlgeschlagen:', err);
-    tasks = [];
-  }
+  // 2) Tasks vom Server laden
+  tasks = (await repoList()).map(toViewModel);
 
-  // 3) Event-Listener binden
-  document.getElementById('new-task-button')?.addEventListener('click', (e) => {
+  // 3) Events binden
+  document.getElementById('new-task-button')?.addEventListener('click', async (e) => {
     e.preventDefault();
-    createNewTask();
+    await createNewTask();
   });
 
   document.getElementById('show-open-tasks')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    currentFilter = 'Offen';
-    renderTaskList();
+    e.preventDefault(); currentFilter = 'Offen'; renderTaskList();
   });
-
   document.getElementById('show-done-tasks')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    currentFilter = 'Erledigt';
-    renderTaskList();
-  });
-
-  // (Optional) Mobile-Aside Toggle – besser hier binden:
-  const asideToggleBtn = document.querySelector('.aside-action-button');
-  asideToggleBtn?.addEventListener('click', () => {
-    const aside = document.querySelector('.task-aside');
-    if (!aside) return;
-    const isHidden = aside.classList.toggle('hidden-mobile');
-    asideToggleBtn.textContent = isHidden ? 'Tasks anzeigen' : 'Tasks verbergen';
+    e.preventDefault(); currentFilter = 'Erledigt'; renderTaskList();
   });
 
   // 4) Initial rendern
   renderTaskList();
 });
+
 
 
 // Burger Menu Toggle
