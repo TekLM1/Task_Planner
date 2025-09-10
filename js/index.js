@@ -170,6 +170,12 @@ async function showTaskDetail(task) {
   if (textarea) {
     textarea.value = task.comment || '';
     textarea.oninput = (e) => { task.comment = e.target.value; };
+    textarea.onchange = async (e) => {
+    const saved = await repoPatch(task.id, {
+      comments: e.target.value ? [{ text: e.target.value }] : []
+    });
+    Object.assign(task, toViewModel(saved));
+  };
   }
 }
 
