@@ -109,60 +109,70 @@ async function showTaskDetail(task) {
   selectedTask = task;
   isEditing = false;
 
-  const infoSection = document.querySelector(".task-info");
-  const [editButton, statusButton, deleteButton] = document.querySelectorAll(".task-actions button");
-
   renderTaskFields(task, false);
-  editButton.textContent = "Editieren";
 
-  editButton.onclick = async () => {
-    isEditing = !isEditing;
+  const actionSection = document.querySelector('.task-actions');
+  if (!actionSection) return;
+  const buttons = actionSection.querySelectorAll('button');
+  const editButton   = buttons[0];
+  const statusButton = buttons[1];
+  const deleteButton = buttons[2];
 
-    if (isEditing) {
-      editButton.textContent = "Speichern";
-      renderTaskFields(task, true);
-    } else {
-      // Speichern -> Werte holen und PATCH
-      editButton.textContent = "Editieren";
-      const patchUI = {
-        titel: document.getElementById('edit-titel').value,
-        beschreibung: document.getElementById('edit-beschreibung').value,
-        zeit: document.getElementById('edit-zeit').value,
-        verantwortlich: document.getElementById('edit-verantwortlich').value,
-        auditor: document.getElementById('edit-auditor').value,
-        status: task.status,           // bleibt hier wie vorher
-        comment: task.comment || ''    // optional mitschicken
-      };
-      const saved = await repoPatch(task.id, toApiModel(patchUI)); // PATCH /api/tasks/:id
+  if (editButton) {
+    editButton.textContent = 'Editieren';
+    editButton.onclick = async () => {
+      isEditing = !isEditing;
+      if (isEditing) {
+        editButton.textContent = 'Speichern';
+        renderTaskFields(task, true);
+      } else {
+        editButton.textContent = 'Editieren';
+        const patchUI = {
+          titel: document.getElementById('edit-titel')?.value ?? task.titel,
+          beschreibung: document.getElementById('edit-beschreibung')?.value ?? task.beschreibung,
+          zeit: document.getElementById('edit-zeit')?.value ?? task.zeit,
+          verantwortlich: document.getElementById('edit-verantwortlich')?.value ?? task.verantwortlich,
+          auditor: document.getElementById('edit-auditor')?.value ?? task.auditor,
+          status: task.status,
+          comment: task.comment || ''
+        };
+        const saved = await repoPatch(task.id, toApiModel(patchUI)); // PATCH
+        Object.assign(task, toViewModel(saved));
+        renderTaskFields(task, false);
+        renderTaskList();
+      }
+    };
+  }
+
+  if (statusButton) {
+    statusButton.onclick = async () => {
+      const next = task.status === 'Offen' ? 'Erledigt' : 'Offen';
+      const saved = await repoPatch(task.id, { status: STATUS_UI2API[next] }); // PATCH nur Status
       Object.assign(task, toViewModel(saved));
       renderTaskFields(task, false);
       renderTaskList();
-    }
-  };
+    };
+  }
 
-  statusButton.onclick = async () => {
-    const next = task.status === "Offen" ? "Erledigt" : "Offen";
-    const saved = await repoPatch(task.id, { status: STATUS_UI2API[next] });
-    Object.assign(task, toViewModel(saved));
-    renderTaskFields(task, false);
-    renderTaskList();
-  };
+  if (deleteButton) {
+    deleteButton.onclick = async () => {
+      await repoDelete(task.id); // DELETE
+      const idx = tasks.findIndex(t => t.id === task.id);
+      if (idx !== -1) tasks.splice(idx, 1);
+      selectedTask = null;
+      renderTaskList();
+      const info = document.querySelector('.task-info');
+      if (info) info.innerHTML = '<h2>[Kein Task ausgewaehlt]</h2>';
+    };
+  }
 
-  deleteButton.onclick = async () => {
-    await repoDelete(task.id); // DELETE /api/tasks/:id
-    const index = tasks.findIndex(t => t.id === task.id);
-    if (index !== -1) tasks.splice(index, 1);
-    selectedTask = null;
-    renderTaskList();
-    document.querySelector(".task-info").innerHTML = "<h2>[Kein Task ausgewaehlt]</h2>";
-  };
-
-  const textarea = document.querySelector(".task-comment textarea");
+  const textarea = document.querySelector('.task-comment textarea');
   if (textarea) {
-    textarea.value = task.comment || "";
-    textarea.oninput = e => { task.comment = e.target.value; };
+    textarea.value = task.comment || '';
+    textarea.oninput = (e) => { task.comment = e.target.value; };
   }
 }
+
 
 
 async function createNewTask() {
