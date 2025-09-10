@@ -14,23 +14,27 @@ function toViewModel(s){ // Server -> UI
     verantwortlich: s.assignee ?? '',
     auditor: s.auditor ?? '',
     status: STATUS_API2UI[s.status] || 'Offen',
-    comment: (s.comments && s.comments[0]?.text) || '',
+    comment: Array.isArray(s.comments) && s.comments[0]?.text ? s.comments[0].text : '',
     createdAt: s.createdAt, updatedAt: s.updatedAt
   };
 }
 
 function toApiModel(u){ // UI -> Server
+  const title = (u.titel && String(u.titel).trim()) || 'Neuer Task'; // wichtig: nie leer
   const body = {
-    title: u.titel ?? '',
+    title,
     description: u.beschreibung ?? '',
     effortMin: Number(u.zeit) || 0,
     assignee: u.verantwortlich ?? '',
     auditor: u.auditor ?? '',
     status: STATUS_UI2API[u.status] || 'offen'
   };
-  if (u.comment !== undefined) body.comments = u.comment ? [{ text: u.comment }] : [];
+  if (u.comment !== undefined) {
+    body.comments = u.comment ? [{ text: String(u.comment) }] : [];
+  }
   return body;
 }
+
 
 
 async function apiGetMe(){
