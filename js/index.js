@@ -167,11 +167,10 @@ async function showTaskDetail(task) {
 
 async function createNewTask() {
   const draft = {
-    titel: '', beschreibung: '', zeit: 0,
-    verantwortlich: '', auditor: '',
-    status: 'Offen', comment: ''
+    titel: 'Neuer Task', beschreibung: '', zeit: 0,
+    verantwortlich: '', auditor: '', status: 'Offen', comment: ''
   };
-  const created = await repoCreate(toApiModel(draft)); // POST /api/tasks
+  const created = await repoCreate(toApiModel(draft)); // POST
   const t = toViewModel(created);
   tasks.unshift(t);
   renderTaskList();
