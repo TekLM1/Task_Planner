@@ -29,15 +29,6 @@
     </form>
   </div>
 
-  <script>
-  // *** ganz einfacher Login ohne Server (fuer sofort) ***
-  document.getElementById('login-form').addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const fd = new FormData(e.target);
-    const user = { email: fd.get('email'), name: fd.get('email').split('@')[0] || 'User' };
-    sessionStorage.setItem('user', JSON.stringify(user)); // merkt den Login in diesem Tab
-    location.href = '../index.html';
-  });
-  </script>
+  <script src="./auth.js"></script>
 </body>
 </html>
