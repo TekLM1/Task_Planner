@@ -101,69 +101,80 @@ function renderTaskList() {
   });
 }
 
-function showTaskDetail(task) {
+async function showTaskDetail(task) {
   selectedTask = task;
   isEditing = false;
 
   const infoSection = document.querySelector(".task-info");
   const [editButton, statusButton, deleteButton] = document.querySelectorAll(".task-actions button");
 
-  renderTaskFields(task, false); // zuerst Felder NICHT bearbeitbar
-
+  renderTaskFields(task, false);
   editButton.textContent = "Editieren";
 
-  editButton.onclick = () => {
+  editButton.onclick = async () => {
     isEditing = !isEditing;
 
     if (isEditing) {
       editButton.textContent = "Speichern";
+      renderTaskFields(task, true);
     } else {
+      // Speichern -> Werte holen und PATCH
       editButton.textContent = "Editieren";
+      const patchUI = {
+        titel: document.getElementById('edit-titel').value,
+        beschreibung: document.getElementById('edit-beschreibung').value,
+        zeit: document.getElementById('edit-zeit').value,
+        verantwortlich: document.getElementById('edit-verantwortlich').value,
+        auditor: document.getElementById('edit-auditor').value,
+        status: task.status,           // bleibt hier wie vorher
+        comment: task.comment || ''    // optional mitschicken
+      };
+      const saved = await repoPatch(task.id, toApiModel(patchUI)); // PATCH /api/tasks/:id
+      Object.assign(task, toViewModel(saved));
+      renderTaskFields(task, false);
+      renderTaskList();
     }
-
-    renderTaskFields(task, isEditing); // Felder sperren oder freischalten
-    renderTaskList(); // Liste neu laden
   };
 
-  statusButton.onclick = () => {
-    task.status = task.status === "Offen" ? "Erledigt" : "Offen";
-    if (!isEditing) renderTaskFields(task, false);
+  statusButton.onclick = async () => {
+    const next = task.status === "Offen" ? "Erledigt" : "Offen";
+    const saved = await repoPatch(task.id, { status: STATUS_UI2API[next] });
+    Object.assign(task, toViewModel(saved));
+    renderTaskFields(task, false);
     renderTaskList();
   };
 
-  deleteButton.onclick = () => {
+  deleteButton.onclick = async () => {
+    await repoDelete(task.id); // DELETE /api/tasks/:id
     const index = tasks.findIndex(t => t.id === task.id);
-    if (index !== -1) {
-      tasks.splice(index, 1);
-      selectedTask = null;
-      renderTaskList();
-      document.querySelector(".task-info").innerHTML = "<h2>[Kein Task ausgewählt]</h2>";
-    }
+    if (index !== -1) tasks.splice(index, 1);
+    selectedTask = null;
+    renderTaskList();
+    document.querySelector(".task-info").innerHTML = "<h2>[Kein Task ausgewaehlt]</h2>";
   };
 
   const textarea = document.querySelector(".task-comment textarea");
-  textarea.value = task.comment || "";
-  textarea.oninput = e => {
-    task.comment = e.target.value;
-  };
+  if (textarea) {
+    textarea.value = task.comment || "";
+    textarea.oninput = e => { task.comment = e.target.value; };
+  }
 }
 
-function createNewTask() {
-  const newTask = {
-    id: Date.now(),
-    titel: "",
-    beschreibung: "",
-    zeit: "",
-    verantwortlich: "",
-    auditor: "",
-    status: "Offen",
-    comment: ""
+
+async function createNewTask() {
+  const draft = {
+    titel: '', beschreibung: '', zeit: 0,
+    verantwortlich: '', auditor: '',
+    status: 'Offen', comment: ''
   };
-  tasks.push(newTask);
+  const created = await repoCreate(toApiModel(draft)); // POST /api/tasks
+  const t = toViewModel(created);
+  tasks.unshift(t);
   renderTaskList();
   isEditing = true;
-  showTaskDetail(newTask);
+  showTaskDetail(t);
 }
+
 
 function renderTaskFields(task, editable) {
   document.querySelector(".task-info").innerHTML = `
