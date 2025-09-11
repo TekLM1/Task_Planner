@@ -134,6 +134,7 @@ function renderTaskFields(task, editable) {
 }
 
 
+
 async function showTaskDetail(task) {
   selectedTask = task;
   isEditing = false;
@@ -396,7 +397,12 @@ async function hideWelcome() {
   if (overlay){
     overlay.style.transition = 'opacity 0.4s ease';
     overlay.style.opacity = '0';
-    setTimeout(()=>{ overlay.style.display='none'; }, 400);
+    setTimeout(()=>{ 
+      overlay.classList.remove('is-open');
+      overlay.classList.add('is-hidden'); 
+      overlay.style.opacity = ''; 
+    }, 400);
   }
 }
+
 
