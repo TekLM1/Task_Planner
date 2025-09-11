@@ -8,16 +8,19 @@ const { auth, requireSupervisor } = require('../middleware/auth');
 function setCookie(res, user){
   const token = jwt.sign(
     { sub: user._id.toString(), role: user.role, email: user.email, name: user.name },
-    process.env.JWT_SECRET, { expiresIn: '7d' }
+    process.env.JWT_SECRET,
+    { expiresIn: '7d' }
   );
-  res.cookie('token', token, {
-  httpOnly: true,
-  sameSite: 'lax',
-  secure: process.env.NODE_ENV === 'production',
-  maxAge: 7*24*60*60*1000
-});
 
+  const prod = process.env.NODE_ENV === 'production';
+  res.cookie('token', token, {
+    httpOnly: true,
+    sameSite: prod ? 'None' : 'Lax', // <- wichtig fuer Cross-Site
+    secure: prod,                    // <- auf Render true (HTTPS)
+    maxAge: 7*24*60*60*1000
+  });
 }
+
 
 router.post('/register', async (req,res)=>{
   const {email,name,password,role} = req.body;
