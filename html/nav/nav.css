@@ -64,18 +64,17 @@
   }
 }
 
-@media (min-width: 651px) {
-  .burger {
-    display: none;
+@media (min-width: 651px){
+  .navbar{ position: relative; } 
+
+  .top-tools{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;              
+    justify-content: center;  
   }
 
-  .navbar-dropdown {
-    display: flex !important;
-    position: static;
-    flex-direction: row;
-    gap: 0.5rem;
-    border: none;
-    padding: 0;
-    margin-left: 1rem;
-  }
+  .navbar-title { margin-right: auto; }
+  .navbar-actions { margin-left: auto; }
 }

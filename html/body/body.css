@@ -16,12 +16,20 @@ html, body {
   height: 100dvh;
   background: rgba(30, 30, 30, 0.85);
   backdrop-filter: blur(10px);
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
   padding: 2rem;
   box-sizing: border-box;
   animation: fadeIn 0.6s ease-out;
+}
+
+#welcome-overlay.is-open { 
+  display: flex; 
+}
+
+#welcome-overlay.is-hidden { 
+  display: none; 
 }
 
 .welcome-content {
