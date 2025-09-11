@@ -46,11 +46,13 @@ async function apiLogout(){
   await fetch(`${API_BASE}/auth/logout`, { method:'POST', credentials:'include' });
 }
 
-async function repoList(){
+async function repoList(filter){
   if (!USE_API) return window.tasks || [];
-  const r = await fetch(`${API_BASE}/tasks`, { credentials:'include' });
+  const qs = filter?.userId ? `?userId=${encodeURIComponent(filter.userId)}` : '';
+  const r = await fetch(`${API_BASE}/tasks${qs}`, { credentials:'include' });
   return r.json();
 }
+
 async function repoCreate(task){
   if (!USE_API) return task;
   const r = await fetch(`${API_BASE}/tasks`, {
@@ -70,6 +72,12 @@ async function repoPatch(id, patch){
 async function repoDelete(id){
   if (!USE_API) return;
   await fetch(`${API_BASE}/tasks/${id}`, { method:'DELETE', credentials:'include' });
+}
+
+async function apiGetUsers(){
+  const r = await fetch(`${API_BASE}/auth/users`, { credentials:'include' });
+  if (!r.ok) return [];
+  return r.json();
 }
 
 let selectedTask = null;
@@ -227,15 +235,77 @@ function renderTaskFields(task, editable) {
   }
 }
 
+async function ensureTopBar(me){
+  const nav = document.querySelector('.navbar') || document.body;
+
+  // Container rechts
+  const holder = document.createElement('div');
+  holder.id = 'top-tools';
+  holder.style.marginLeft = 'auto';
+  holder.style.display = 'flex';
+  holder.style.gap = '8px';
+  holder.style.alignItems = 'center';
+
+  // Anzeige "Angemeldet als"
+  const info = document.createElement('span');
+  info.style.opacity = '0.8';
+  info.textContent = `${me.name || me.email} (${me.role})`;
+  holder.appendChild(info);
+
+  // Wenn Vorgesetzter: User-Select einblenden
+  let userSelect = null;
+  if (me.role === 'supervisor') {
+    userSelect = document.createElement('select');
+    userSelect.id = 'user-filter';
+    const optAll = document.createElement('option');
+    optAll.value = '';
+    optAll.textContent = 'Alle Benutzer';
+    userSelect.appendChild(optAll);
+
+    const users = await apiGetUsers();
+    users.forEach(u => {
+      const o = document.createElement('option');
+      o.value = u.id;
+      o.textContent = `${u.name} (${u.email})`;
+      userSelect.appendChild(o);
+    });
+
+    userSelect.addEventListener('change', async () => {
+      const userId = userSelect.value || null;
+      const list = await repoList(userId ? { userId } : undefined);
+      tasks = list.map(toViewModel);
+      renderTaskList();
+    });
+
+    holder.appendChild(userSelect);
+  }
+
+  // Logout
+  const logout = document.createElement('a');
+  logout.href = '#';
+  logout.id = 'logout-link';
+  logout.textContent = 'Logout';
+  logout.addEventListener('click', async (e)=>{
+    e.preventDefault();
+    await apiLogout();
+    location.href = './auth/login.html';
+  });
+  holder.appendChild(logout);
+
+  nav.appendChild(holder);
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
-  // Login-Check
   const me = await apiGetMe();
   if (!me) { location.href = './auth/login.html'; return; }
 
-  // Tasks laden (Server -> UI-Model)
+  // NEU: Top-Bar (Userinfo + optionaler User-Filter + Logout)
+  await ensureTopBar(me);
+
+  // Tasks laden
   try {
-    const serverTasks = await repoList();
-    tasks = serverTasks.map(toViewModel);   // <-- wichtig
+    const serverTasks = await repoList(); // Supervisor: alle; User: nur eigene
+    tasks = serverTasks.map(toViewModel);
   } catch (err) {
     console.error('Tasks laden fehlgeschlagen:', err);
     tasks = [];

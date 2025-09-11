@@ -2,6 +2,7 @@ const express = require('express');
 const Task = require('../models/Task');
 const { auth } = require('../middleware/auth');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 router.get('/', auth, async (req,res)=>{
   const isSup = req.user.role==='supervisor';

@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const router = express.Router();
+const { auth, requireSupervisor } = require('../middleware/auth');
 
 function setCookie(res, user){
   const token = jwt.sign(
@@ -42,6 +43,11 @@ router.get('/me',(req,res)=>{
     const p = jwt.verify(req.cookies?.token, process.env.JWT_SECRET);
     res.json(p);
   }catch{ res.status(401).json({error:'unauthorized'}); }
+});
+
+router.get('/users', auth, requireSupervisor, async (req, res) => {
+  const users = await User.find({}, { _id:1, email:1, name:1, role:1 }).sort({ name: 1 });
+  res.json(users.map(u => ({ id: u._id, email: u.email, name: u.name, role: u.role })));
 });
 
 module.exports = router;
