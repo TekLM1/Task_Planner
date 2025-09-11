@@ -10,7 +10,13 @@ function setCookie(res, user){
     { sub: user._id.toString(), role: user.role, email: user.email, name: user.name },
     process.env.JWT_SECRET, { expiresIn: '7d' }
   );
-  res.cookie('token', token, { httpOnly:true, sameSite:'lax', secure:false, maxAge:7*24*60*60*1000 });
+  res.cookie('token', token, {
+  httpOnly: true,
+  sameSite: 'lax',
+  secure: process.env.NODE_ENV === 'production', // auf Render true
+  maxAge: 7*24*60*60*1000
+});
+
 }
 
 router.post('/register', async (req,res)=>{

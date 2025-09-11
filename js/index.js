@@ -1,6 +1,9 @@
 let tasks = [];
 const USE_API = true;
-const API_BASE = 'http://localhost:3001/api';
+const API_BASE = location.hostname === 'localhost'
+  ? 'http://localhost:3001/api'
+  : 'https://web-lula.onrender.com/api';
+
 
 const STATUS_UI2API = { 'Offen':'offen', 'Erledigt':'erledigt', 'In Arbeit':'in_arbeit', 'Review':'review' };
 const STATUS_API2UI = { 'offen':'Offen', 'erledigt':'Erledigt', 'in_arbeit':'In Arbeit', 'review':'Review' };
