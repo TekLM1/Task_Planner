@@ -50,4 +50,9 @@ router.get('/users', auth, requireSupervisor, async (req, res) => {
   res.json(users.map(u => ({ id: u._id, email: u.email, name: u.name, role: u.role })));
 });
 
+router.get('/supervisors', auth, async (req, res) => {
+  const users = await User.find({ role: 'supervisor' }, { _id:1, email:1, name:1 }).sort({ name: 1 });
+  res.json(users.map(u => ({ id: u._id, email: u.email, name: u.name })));
+});
+
 module.exports = router;

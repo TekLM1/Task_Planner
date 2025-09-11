@@ -12,7 +12,6 @@ function toViewModel(s){ // Server -> UI
     beschreibung: s.description ?? '',
     zeit: s.effortMin ?? 0,
     verantwortlich: s.assignee ?? '',
-    auditor: s.auditor ?? '',
     status: STATUS_API2UI[s.status] || 'Offen',
     comment: Array.isArray(s.comments) && s.comments[0]?.text ? s.comments[0].text : '',
     createdAt: s.createdAt, updatedAt: s.updatedAt
@@ -26,7 +25,6 @@ function toApiModel(u){ // UI -> Server
     description: u.beschreibung ?? '',
     effortMin: Number(u.zeit) || 0,
     assignee: u.verantwortlich ?? '',
-    auditor: u.auditor ?? '',
     status: STATUS_UI2API[u.status] || 'offen'
   };
   if (u.comment !== undefined) {
@@ -76,6 +74,12 @@ async function repoDelete(id){
 
 async function apiGetUsers(){
   const r = await fetch(`${API_BASE}/auth/users`, { credentials:'include' });
+  if (!r.ok) return [];
+  return r.json();
+}
+
+async function apiGetSupervisors(){
+  const r = await fetch(`${API_BASE}/auth/supervisors`, { credentials:'include' });
   if (!r.ok) return [];
   return r.json();
 }
@@ -140,7 +144,6 @@ async function showTaskDetail(task) {
           beschreibung: document.getElementById('edit-beschreibung')?.value ?? task.beschreibung,
           zeit: document.getElementById('edit-zeit')?.value ?? task.zeit,
           verantwortlich: document.getElementById('edit-verantwortlich')?.value ?? task.verantwortlich,
-          auditor: document.getElementById('edit-auditor')?.value ?? task.auditor,
           status: task.status,
           comment: task.comment || ''
         };
@@ -192,7 +195,7 @@ async function showTaskDetail(task) {
 async function createNewTask() {
   const draft = {
     titel: 'Neuer Task', beschreibung: '', zeit: 0,
-    verantwortlich: '', auditor: '', status: 'Offen', comment: ''
+    verantwortlich: '', status: 'Offen', comment: ''
   };
   const created = await repoCreate(toApiModel(draft)); // POST
   const t = toViewModel(created);
@@ -215,9 +218,6 @@ function renderTaskFields(task, editable) {
     <p><strong>Verantwortlicher:</strong>
       <input type="text" value="${task.verantwortlich}" id="edit-verantwortlich" ${editable ? "" : "disabled"} />
     </p>
-    <p><strong>Auditor:</strong>
-      <input type="text" value="${task.auditor}" id="edit-auditor" ${editable ? "" : "disabled"} />
-    </p>
     <p><strong>Status:</strong>
       <input type="text" value="${task.status}" id="edit-status" disabled />
     </p>
@@ -231,59 +231,47 @@ function renderTaskFields(task, editable) {
     document.getElementById("edit-beschreibung").addEventListener("input", e => task.beschreibung = e.target.value);
     document.getElementById("edit-zeit").addEventListener("input", e => task.zeit = e.target.value);
     document.getElementById("edit-verantwortlich").addEventListener("input", e => task.verantwortlich = e.target.value);
-    document.getElementById("edit-auditor").addEventListener("input", e => task.auditor = e.target.value);
   }
 }
 
 async function ensureTopBar(me){
   const nav = document.querySelector('.navbar') || document.body;
 
-  // Container rechts
   const holder = document.createElement('div');
-  holder.id = 'top-tools';
-  holder.style.marginLeft = 'auto';
-  holder.style.display = 'flex';
-  holder.style.gap = '8px';
-  holder.style.alignItems = 'center';
+  holder.className = 'top-tools';
 
-  // Anzeige "Angemeldet als"
   const info = document.createElement('span');
-  info.style.opacity = '0.8';
+  info.className = 'top-tools__info';
   info.textContent = `${me.name || me.email} (${me.role})`;
   holder.appendChild(info);
 
-  // Wenn Vorgesetzter: User-Select einblenden
-  let userSelect = null;
   if (me.role === 'supervisor') {
-    userSelect = document.createElement('select');
-    userSelect.id = 'user-filter';
+    // User-Filter fuer Vorgesetzte (dein bestehender Code darf bleiben)
+    const userSelect = document.createElement('select');
+    userSelect.className = 'top-tools__select';
     const optAll = document.createElement('option');
-    optAll.value = '';
-    optAll.textContent = 'Alle Benutzer';
+    optAll.value = ''; optAll.textContent = 'Alle Benutzer';
     userSelect.appendChild(optAll);
-
-    const users = await apiGetUsers();
+    const users = await apiGetUsers(); // <- du hast diese Funktion bereits
     users.forEach(u => {
       const o = document.createElement('option');
       o.value = u.id;
       o.textContent = `${u.name} (${u.email})`;
       userSelect.appendChild(o);
     });
-
     userSelect.addEventListener('change', async () => {
       const userId = userSelect.value || null;
       const list = await repoList(userId ? { userId } : undefined);
       tasks = list.map(toViewModel);
       renderTaskList();
     });
-
     holder.appendChild(userSelect);
   }
 
-  // Logout
   const logout = document.createElement('a');
   logout.href = '#';
   logout.id = 'logout-link';
+  logout.className = 'top-tools__logout';
   logout.textContent = 'Logout';
   logout.addEventListener('click', async (e)=>{
     e.preventDefault();
@@ -295,11 +283,14 @@ async function ensureTopBar(me){
   nav.appendChild(holder);
 }
 
+
 document.addEventListener('DOMContentLoaded', async () => {
   const me = await apiGetMe();
   if (!me) { location.href = './auth/login.html'; return; }
 
-  // NEU: Top-Bar (Userinfo + optionaler User-Filter + Logout)
+  try { supervisors = await apiGetSupervisors(); } catch { supervisors = []; }
+
+  //Top-Bar (Userinfo + optionaler User-Filter + Logout)
   await ensureTopBar(me);
 
   // Tasks laden
