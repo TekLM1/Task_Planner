@@ -3,6 +3,9 @@ const USE_API = true;
 const API_BASE = location.hostname === 'localhost'
   ? 'http://localhost:3001/api'
   : 'https://task-planner-api-af72.onrender.com/api';
+const IS_PROD = location.hostname === 'web-lula.onrender.com';
+let supervisors = []; 
+
 
 
 const STATUS_UI2API = { 'Offen':'offen', 'Erledigt':'erledigt', 'In Arbeit':'in_arbeit', 'Review':'review' };
@@ -288,12 +291,31 @@ async function ensureTopBar(me){
 
 
 document.addEventListener('DOMContentLoaded', async () => {
+  if (IS_PROD) {
+    // Auf der Render-URL: Intro anzeigen, NICHT automatisch starten
+    const ov = document.getElementById('welcome-overlay');
+    if (ov) ov.style.display = 'flex';
+    return; // erst der Button "Let's start planning" startet initApp()
+  }
+
+  // Lokal: direkt starten
+  await initApp();
+});
+
+let appReady = false;
+let eventsBound = false;
+
+async function initApp(){
+  if (appReady) return;
+
+  // Login-Check
   const me = await apiGetMe();
   if (!me) { location.href = './auth/login.html'; return; }
 
+  // Supervisor-Liste fuer Dropdown laden
   try { supervisors = await apiGetSupervisors(); } catch { supervisors = []; }
 
-  //Top-Bar (Userinfo + optionaler User-Filter + Logout)
+  // Top-Bar (Userinfo + optionaler User-Filter + Logout)
   await ensureTopBar(me);
 
   // Tasks laden
@@ -305,7 +327,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     tasks = [];
   }
 
-  // Events
+  // Events einmalig binden
+  bindEventsOnce();
+
+  // Erstes Rendern
+  renderTaskList();
+
+  appReady = true;
+}
+
+function bindEventsOnce(){
+  if (eventsBound) return;
+
   document.getElementById('new-task-button')?.addEventListener('click', async (e) => {
     e.preventDefault();
     await createNewTask();
@@ -319,26 +352,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     e.preventDefault(); currentFilter = 'Erledigt'; renderTaskList();
   });
 
-  // Initial render
-  renderTaskList();
-
-  // Button Listener für Burger Menu
-const asideToggleBtn = document.querySelector(".aside-action-button");
-if (asideToggleBtn) {
-  asideToggleBtn.addEventListener("click", () => {
+  // Mobile Aside Toggle
+  const asideToggleBtn = document.querySelector(".aside-action-button");
+  asideToggleBtn?.addEventListener("click", () => {
     const aside = document.querySelector(".task-aside");
     if (!aside) return;
-
     const isHidden = aside.classList.toggle("hidden-mobile");
     asideToggleBtn.textContent = isHidden ? "Tasks anzeigen" : "Tasks verbergen";
   });
+
+  eventsBound = true;
 }
-
-
-});
-
-
-
 
 // Burger Menu Toggle
 function toggleMenu() {
