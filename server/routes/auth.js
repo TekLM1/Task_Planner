@@ -15,11 +15,14 @@ function setCookie(res, user){
   const prod = process.env.NODE_ENV === 'production';
   res.cookie('token', token, {
     httpOnly: true,
-    sameSite: prod ? 'None' : 'Lax', // <- wichtig fuer Cross-Site
-    secure: prod,                    // <- auf Render true (HTTPS)
+    sameSite: prod ? 'None' : 'Lax',
+    secure: prod,
     maxAge: 7*24*60*60*1000
   });
+
+  return token;
 }
+
 
 
 router.post('/register', async (req,res)=>{
