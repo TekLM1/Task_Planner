@@ -11,6 +11,12 @@ let supervisors = [];
 const STATUS_UI2API = { 'Offen':'offen', 'Erledigt':'erledigt', 'In Arbeit':'in_arbeit', 'Review':'review' };
 const STATUS_API2UI = { 'offen':'Offen', 'erledigt':'Erledigt', 'in_arbeit':'In Arbeit', 'review':'Review' };
 
+function authHeader(){
+  const t = localStorage.getItem('token');
+  return t ? { 'Authorization': `Bearer ${t}` } : {};
+}
+
+
 function toViewModel(s){ // Server -> UI
   return {
     id: s._id,
@@ -54,16 +60,24 @@ async function apiGetMe(){
 }
 
 async function apiLogout(){
-  await fetch(`${API_BASE}/auth/logout`, { method:'POST', credentials:'include', headers:{ ...authHeader() } });
-  localStorage.removeItem('token'); // <--- NEU
+  await fetch(`${API_BASE}/auth/logout`, {
+    method:'POST',
+    credentials:'include',
+    headers: { ...authHeader() }
+  });
+  localStorage.removeItem('token'); // wichtig
 }
 
 async function repoList(filter){
   if (!USE_API) return window.tasks || [];
   const qs = filter?.userId ? `?userId=${encodeURIComponent(filter.userId)}` : '';
-  const r = await fetch(`${API_BASE}/tasks${qs}`, { credentials:'include', headers:{ ...authHeader() } });
+  const r = await fetch(`${API_BASE}/tasks${qs}`, {
+    credentials:'include',
+    headers: { ...authHeader() }
+  });
   return r.json();
 }
+
 async function repoCreate(task){
   if (!USE_API) return task;
   const r = await fetch(`${API_BASE}/tasks`, {
@@ -74,6 +88,7 @@ async function repoCreate(task){
   });
   return r.json();
 }
+
 async function repoPatch(id, patch){
   if (!USE_API) return patch;
   const r = await fetch(`${API_BASE}/tasks/${id}`, {
@@ -84,15 +99,15 @@ async function repoPatch(id, patch){
   });
   return r.json();
 }
+
 async function repoDelete(id){
   if (!USE_API) return;
   await fetch(`${API_BASE}/tasks/${id}`, {
     method:'DELETE',
     credentials:'include',
-    headers:{ ...authHeader() }
+    headers: { ...authHeader() }
   });
 }
-
 
 async function apiGetUsers(){
   const r = await fetch(`${API_BASE}/auth/users`, { credentials:'include' });
