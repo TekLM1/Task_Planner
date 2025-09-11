@@ -337,12 +337,13 @@ async function ensureTopBar(me){
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (IS_PROD) {
-    const ov = document.getElementById('welcome-overlay');
-    ov?.classList.add('is-open'); // Intro zeigen
-    return; // Start erst per Button (hideWelcome)
+    document.getElementById('welcome-overlay')?.classList.add('is-open');
+    return; // Start NUR per Button
   }
-  await initApp(); // lokal direkt starten
+  await initApp(); // lokal direkt
 });
+
+
 
 let appReady = false;
 let eventsBound = false;
@@ -416,6 +417,9 @@ function toggleMenu() {
 
 
 async function hideWelcome() {
+  // optional: Debug
+  console.log('[overlay] hideWelcome clicked');
+
   const me = await apiGetMe();
   if (!me) { location.href = './auth/login.html'; return; }
 
@@ -432,6 +436,7 @@ async function hideWelcome() {
     }, 400);
   }
 }
+
 window.hideWelcome = hideWelcome;
 
 document.addEventListener('click', (e) => {
