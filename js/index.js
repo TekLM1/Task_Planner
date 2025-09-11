@@ -13,7 +13,7 @@ const STATUS_API2UI = { 'offen':'Offen', 'erledigt':'Erledigt', 'in_arbeit':'In 
 
 function authHeader(){
   const t = localStorage.getItem('token');
-  return t ? { 'Authorization': `Bearer ${t}` } : {};
+  return t ? { Authorization: `Bearer ${t}` } : {};
 }
 
 

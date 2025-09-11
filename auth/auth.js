@@ -17,19 +17,20 @@ document.addEventListener('DOMContentLoaded', ()=>{
 });
 
 async function post(path, data){
-  console.log('POST', API + path, data);
   const r = await fetch(API + path, {
     method:'POST',
-    headers:{ 'Content-Type':'application/json', ...authHeader() },
+    headers:{ 'Content-Type':'application/json' },
     credentials:'include',
     body: JSON.stringify(data)
   });
   const json = await r.json().catch(()=> ({}));
-  console.log('RESP', r.status, json);
   if (!r.ok) throw new Error(json.error || 'Fehler');
+
   if (json.token) localStorage.setItem('token', json.token);
+
   return json;
 }
+
 
 async function onLogin(e){
   e.preventDefault();
