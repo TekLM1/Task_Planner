@@ -1,22 +1,28 @@
+// ====== Config & State ======
 let tasks = [];
 const USE_API = true;
 const API_BASE = location.hostname === 'localhost'
   ? 'http://localhost:3001/api'
   : 'https://task-planner-api-af72.onrender.com/api';
 const IS_PROD = location.hostname === 'web-lula.onrender.com';
-let supervisors = []; 
+let supervisors = [];
+let selectedTask = null;
+let isEditing = false;
+let currentFilter = 'Alle';
+let appReady = false;
+let eventsBound = false;
 
-
-
+// ====== Status Mapping UI <-> API ======
 const STATUS_UI2API = { 'Offen':'offen', 'Erledigt':'erledigt', 'In Arbeit':'in_arbeit', 'Review':'review' };
 const STATUS_API2UI = { 'offen':'Offen', 'erledigt':'Erledigt', 'in_arbeit':'In Arbeit', 'review':'Review' };
 
+// ====== Auth-Header (Bearer aus localStorage) ======
 function authHeader(){
   const t = localStorage.getItem('token');
   return t ? { Authorization: `Bearer ${t}` } : {};
 }
 
-
+// ====== Model Mapper ======
 function toViewModel(s){ // Server -> UI
   return {
     id: s._id,
@@ -26,12 +32,13 @@ function toViewModel(s){ // Server -> UI
     verantwortlich: s.assignee ?? '',
     status: STATUS_API2UI[s.status] || 'Offen',
     comment: Array.isArray(s.comments) && s.comments[0]?.text ? s.comments[0].text : '',
-    createdAt: s.createdAt, updatedAt: s.updatedAt
+    createdAt: s.createdAt,
+    updatedAt: s.updatedAt
   };
 }
 
 function toApiModel(u){ // UI -> Server
-  const title = (u.titel && String(u.titel).trim()) || 'Neuer Task'; // wichtig: nie leer
+  const title = (u.titel && String(u.titel).trim()) || 'Neuer Task';
   const body = {
     title,
     description: u.beschreibung ?? '',
@@ -45,11 +52,7 @@ function toApiModel(u){ // UI -> Server
   return body;
 }
 
-function authHeader(){
-  const t = localStorage.getItem('token');
-  return t ? { 'Authorization': `Bearer ${t}` } : {};
-}
-
+// ====== API Calls ======
 async function apiGetMe(){
   const r = await fetch(`${API_BASE}/auth/me`, {
     credentials:'include',
@@ -58,26 +61,36 @@ async function apiGetMe(){
   if (r.status === 401) return null;
   return r.json();
 }
-
 async function apiLogout(){
   await fetch(`${API_BASE}/auth/logout`, {
-    method:'POST',
-    credentials:'include',
-    headers: { ...authHeader() }
+    method:'POST', credentials:'include', headers: { ...authHeader() }
   });
-  localStorage.removeItem('token'); // wichtig
+  localStorage.removeItem('token');
+}
+
+async function apiGetUsers(){
+  const r = await fetch(`${API_BASE}/auth/users`, {
+    credentials:'include', headers:{ ...authHeader() }
+  });
+  if (!r.ok) return [];
+  return r.json();
+}
+async function apiGetSupervisors(){
+  const r = await fetch(`${API_BASE}/auth/supervisors`, {
+    credentials:'include', headers:{ ...authHeader() }
+  });
+  if (!r.ok) return [];
+  return r.json();
 }
 
 async function repoList(filter){
   if (!USE_API) return window.tasks || [];
   const qs = filter?.userId ? `?userId=${encodeURIComponent(filter.userId)}` : '';
   const r = await fetch(`${API_BASE}/tasks${qs}`, {
-    credentials:'include',
-    headers: { ...authHeader() }
+    credentials:'include', headers: { ...authHeader() }
   });
   return r.json();
 }
-
 async function repoCreate(task){
   if (!USE_API) return task;
   const r = await fetch(`${API_BASE}/tasks`, {
@@ -88,7 +101,6 @@ async function repoCreate(task){
   });
   return r.json();
 }
-
 async function repoPatch(id, patch){
   if (!USE_API) return patch;
   const r = await fetch(`${API_BASE}/tasks/${id}`, {
@@ -99,32 +111,36 @@ async function repoPatch(id, patch){
   });
   return r.json();
 }
-
 async function repoDelete(id){
   if (!USE_API) return;
   await fetch(`${API_BASE}/tasks/${id}`, {
-    method:'DELETE',
-    credentials:'include',
-    headers: { ...authHeader() }
+    method:'DELETE', credentials:'include', headers:{ ...authHeader() }
   });
 }
 
-async function apiGetUsers(){
-  const r = await fetch(`${API_BASE}/auth/users`, { credentials:'include' });
-  if (!r.ok) return [];
-  return r.json();
+// ====== Rendering ======
+function renderTaskList() {
+  const taskList = document.getElementById('task-list');
+  if (!taskList) return;
+
+  taskList.innerHTML = '';
+
+  const filtered = tasks.filter(t => {
+    if (currentFilter === 'Offen') return t.status === 'Offen';
+    if (currentFilter === 'Erledigt') return t.status === 'Erledigt';
+    return true;
+  });
+
+  filtered.forEach(task => {
+    const card = document.createElement('div');
+    card.className = 'task-card';
+    card.textContent = `📝 ${task.titel || '(Unbenannter Task)'}`;
+    card.dataset.id = task.id;
+    card.addEventListener('click', () => showTaskDetail(task));
+    if (selectedTask && selectedTask.id === task.id) card.classList.add('active');
+    taskList.appendChild(card);
+  });
 }
-
-async function apiGetSupervisors(){
-  const r = await fetch(`${API_BASE}/auth/supervisors`, { credentials:'include' });
-  if (!r.ok) return [];
-  return r.json();
-}
-
-let selectedTask = null;
-let isEditing = false; 
-
-let currentFilter = "Alle"; // Neu hinzugefügt
 
 function renderTaskFields(task, editable) {
   const verantwortlicherControl = editable
@@ -138,13 +154,16 @@ function renderTaskFields(task, editable) {
        </select>`
     : `<span>${task.verantwortlich || '-'}</span>`;
 
-  document.querySelector(".task-info").innerHTML = `
-    <h2><input type="text" value="${task.titel}" id="edit-titel" placeholder="Titel eingeben…" ${editable ? "" : "disabled"} /></h2>
+  const html = `
+    <h2>
+      <input type="text" value="${task.titel}" id="edit-titel"
+             placeholder="Titel eingeben…" ${editable ? '' : 'disabled'} />
+    </h2>
     <p><strong>Beschreibung:</strong><br>
-      <textarea id="edit-beschreibung" ${editable ? "" : "disabled"}>${task.beschreibung}</textarea>
+      <textarea id="edit-beschreibung" ${editable ? '' : 'disabled'}>${task.beschreibung}</textarea>
     </p>
     <p><strong>Zeit Aufwand:</strong>
-      <input type="text" value="${task.zeit}" id="edit-zeit" ${editable ? "" : "disabled"} />
+      <input type="text" value="${task.zeit}" id="edit-zeit" ${editable ? '' : 'disabled'} />
     </p>
     <p><strong>Verantwortlicher:</strong>
       ${verantwortlicherControl}
@@ -153,19 +172,19 @@ function renderTaskFields(task, editable) {
       <input type="text" value="${task.status}" id="edit-status" disabled />
     </p>
   `;
+  document.querySelector('.task-info').innerHTML = html;
 
   if (editable) {
-    document.getElementById("edit-titel").addEventListener("input", e => {
+    document.getElementById('edit-titel')?.addEventListener('input', e => {
       task.titel = e.target.value; renderTaskList();
     });
-    document.getElementById("edit-beschreibung").addEventListener("input", e => task.beschreibung = e.target.value);
-    document.getElementById("edit-zeit").addEventListener("input", e => task.zeit = e.target.value);
-    document.getElementById("edit-verantwortlich").addEventListener("change", e => task.verantwortlich = e.target.value);
+    document.getElementById('edit-beschreibung')?.addEventListener('input', e => task.beschreibung = e.target.value);
+    document.getElementById('edit-zeit')?.addEventListener('input', e => task.zeit = e.target.value);
+    document.getElementById('edit-verantwortlich')?.addEventListener('change', e => task.verantwortlich = e.target.value);
   }
 }
 
-
-
+// ====== UI Actions ======
 async function showTaskDetail(task) {
   selectedTask = task;
   isEditing = false;
@@ -196,7 +215,7 @@ async function showTaskDetail(task) {
           status: task.status,
           comment: task.comment || ''
         };
-        const saved = await repoPatch(task.id, toApiModel(patchUI)); // PATCH
+        const saved = await repoPatch(task.id, toApiModel(patchUI));
         Object.assign(task, toViewModel(saved));
         renderTaskFields(task, false);
         renderTaskList();
@@ -207,7 +226,7 @@ async function showTaskDetail(task) {
   if (statusButton) {
     statusButton.onclick = async () => {
       const next = task.status === 'Offen' ? 'Erledigt' : 'Offen';
-      const saved = await repoPatch(task.id, { status: STATUS_UI2API[next] }); // PATCH nur Status
+      const saved = await repoPatch(task.id, { status: STATUS_UI2API[next] });
       Object.assign(task, toViewModel(saved));
       renderTaskFields(task, false);
       renderTaskList();
@@ -216,7 +235,7 @@ async function showTaskDetail(task) {
 
   if (deleteButton) {
     deleteButton.onclick = async () => {
-      await repoDelete(task.id); // DELETE
+      await repoDelete(task.id);
       const idx = tasks.findIndex(t => t.id === task.id);
       if (idx !== -1) tasks.splice(idx, 1);
       selectedTask = null;
@@ -231,22 +250,20 @@ async function showTaskDetail(task) {
     textarea.value = task.comment || '';
     textarea.oninput = (e) => { task.comment = e.target.value; };
     textarea.onchange = async (e) => {
-    const saved = await repoPatch(task.id, {
-      comments: e.target.value ? [{ text: e.target.value }] : []
-    });
-    Object.assign(task, toViewModel(saved));
-  };
+      const saved = await repoPatch(task.id, {
+        comments: e.target.value ? [{ text: e.target.value }] : []
+      });
+      Object.assign(task, toViewModel(saved));
+    };
   }
 }
-
-
 
 async function createNewTask() {
   const draft = {
     titel: 'Neuer Task', beschreibung: '', zeit: 0,
     verantwortlich: '', status: 'Offen', comment: ''
   };
-  const created = await repoCreate(toApiModel(draft)); // POST
+  const created = await repoCreate(toApiModel(draft));
   const t = toViewModel(created);
   tasks.unshift(t);
   renderTaskList();
@@ -254,38 +271,9 @@ async function createNewTask() {
   showTaskDetail(t);
 }
 
-
-function renderTaskFields(task, editable) {
-  document.querySelector(".task-info").innerHTML = `
-    <h2><input type="text" value="${task.titel}" id="edit-titel" placeholder="Titel eingeben…" ${editable ? "" : "disabled"} /></h2>
-    <p><strong>Beschreibung:</strong><br>
-      <textarea id="edit-beschreibung" ${editable ? "" : "disabled"}>${task.beschreibung}</textarea>
-    </p>
-    <p><strong>Zeit Aufwand:</strong>
-      <input type="text" value="${task.zeit}" id="edit-zeit" ${editable ? "" : "disabled"} />
-    </p>
-    <p><strong>Verantwortlicher:</strong>
-      <input type="text" value="${task.verantwortlich}" id="edit-verantwortlich" ${editable ? "" : "disabled"} />
-    </p>
-    <p><strong>Status:</strong>
-      <input type="text" value="${task.status}" id="edit-status" disabled />
-    </p>
-  `;
-
-  if (editable) {
-    document.getElementById("edit-titel").addEventListener("input", e => {
-      task.titel = e.target.value;
-      renderTaskList();
-    });
-    document.getElementById("edit-beschreibung").addEventListener("input", e => task.beschreibung = e.target.value);
-    document.getElementById("edit-zeit").addEventListener("input", e => task.zeit = e.target.value);
-    document.getElementById("edit-verantwortlich").addEventListener("input", e => task.verantwortlich = e.target.value);
-  }
-}
-
+// ====== Top Bar ======
 async function ensureTopBar(me){
   const nav = document.querySelector('.navbar') || document.body;
-
   if (document.querySelector('.top-tools')) return; // schon vorhanden
 
   const holder = document.createElement('div');
@@ -297,25 +285,27 @@ async function ensureTopBar(me){
   holder.appendChild(info);
 
   if (me.role === 'supervisor') {
-    // User-Filter fuer Vorgesetzte (dein bestehender Code darf bleiben)
     const userSelect = document.createElement('select');
     userSelect.className = 'top-tools__select';
     const optAll = document.createElement('option');
     optAll.value = ''; optAll.textContent = 'Alle Benutzer';
     userSelect.appendChild(optAll);
-    const users = await apiGetUsers(); // <- du hast diese Funktion bereits
+
+    const users = await apiGetUsers();
     users.forEach(u => {
       const o = document.createElement('option');
       o.value = u.id;
       o.textContent = `${u.name} (${u.email})`;
       userSelect.appendChild(o);
     });
+
     userSelect.addEventListener('change', async () => {
       const userId = userSelect.value || null;
       const list = await repoList(userId ? { userId } : undefined);
       tasks = list.map(toViewModel);
       renderTaskList();
     });
+
     holder.appendChild(userSelect);
   }
 
@@ -329,51 +319,38 @@ async function ensureTopBar(me){
     await apiLogout();
     location.href = './auth/login.html';
   });
-  holder.appendChild(logout);
 
+  holder.appendChild(logout);
   nav.appendChild(holder);
 }
 
-
+// ====== App Start ======
 document.addEventListener('DOMContentLoaded', async () => {
   if (IS_PROD) {
     document.getElementById('welcome-overlay')?.classList.add('is-open');
-    return; // Start NUR per Button
+    return; // Start nur per Button
   }
   await initApp(); // lokal direkt
 });
 
-
-
-let appReady = false;
-let eventsBound = false;
-
 async function initApp(){
   if (appReady) return;
 
-  // Login-Check
   const me = await apiGetMe();
   if (!me) { location.href = './auth/login.html'; return; }
 
-  // Supervisor-Liste fuer Dropdown laden
   try { supervisors = await apiGetSupervisors(); } catch { supervisors = []; }
-
-  // Top-Bar (Userinfo + optionaler User-Filter + Logout)
   await ensureTopBar(me);
 
-  // Tasks laden
   try {
-    const serverTasks = await repoList(); // Supervisor: alle; User: nur eigene
+    const serverTasks = await repoList();
     tasks = serverTasks.map(toViewModel);
   } catch (err) {
     console.error('Tasks laden fehlgeschlagen:', err);
     tasks = [];
   }
 
-  // Events einmalig binden
   bindEventsOnce();
-
-  // Erstes Rendern
   renderTaskList();
 
   appReady = true;
@@ -396,28 +373,25 @@ function bindEventsOnce(){
   });
 
   // Mobile Aside Toggle
-  const asideToggleBtn = document.querySelector(".aside-action-button");
-  asideToggleBtn?.addEventListener("click", () => {
-    const aside = document.querySelector(".task-aside");
+  const asideToggleBtn = document.querySelector('.aside-action-button');
+  asideToggleBtn?.addEventListener('click', () => {
+    const aside = document.querySelector('.task-aside');
     if (!aside) return;
-    const isHidden = aside.classList.toggle("hidden-mobile");
-    asideToggleBtn.textContent = isHidden ? "Tasks anzeigen" : "Tasks verbergen";
+    const isHidden = aside.classList.toggle('hidden-mobile');
+    asideToggleBtn.textContent = isHidden ? 'Tasks anzeigen' : 'Tasks verbergen';
   });
 
   eventsBound = true;
 }
 
-// Burger Menu Toggle
+// ====== UI Helpers ======
 function toggleMenu() {
-  const menu = document.getElementById("burger-menu");
-  if (menu) {
-    menu.classList.toggle("show");
-  }
+  const menu = document.getElementById('burger-menu');
+  menu?.classList.toggle('show');
 }
 
-
+// ====== Overlay Button ======
 async function hideWelcome() {
-  // optional: Debug
   console.log('[overlay] hideWelcome clicked');
 
   const me = await apiGetMe();
@@ -436,15 +410,12 @@ async function hideWelcome() {
     }, 400);
   }
 }
+window.hideWelcome = hideWelcome; // fuer onclick im HTML
 
-window.hideWelcome = hideWelcome;
-
+// Fallback: Event Delegation falls onclick entfernt wird
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('#welcome-start-btn');
   if (!btn) return;
   e.preventDefault();
   hideWelcome();
 });
-
-
-
