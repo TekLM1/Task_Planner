@@ -39,44 +39,60 @@ function toApiModel(u){ // UI -> Server
   return body;
 }
 
-
+function authHeader(){
+  const t = localStorage.getItem('token');
+  return t ? { 'Authorization': `Bearer ${t}` } : {};
+}
 
 async function apiGetMe(){
-  const r = await fetch(`${API_BASE}/auth/me`, { credentials:'include' });
+  const r = await fetch(`${API_BASE}/auth/me`, {
+    credentials:'include',
+    headers: { ...authHeader() }
+  });
   if (r.status === 401) return null;
   return r.json();
 }
+
 async function apiLogout(){
-  await fetch(`${API_BASE}/auth/logout`, { method:'POST', credentials:'include' });
+  await fetch(`${API_BASE}/auth/logout`, { method:'POST', credentials:'include', headers:{ ...authHeader() } });
+  localStorage.removeItem('token'); // <--- NEU
 }
 
 async function repoList(filter){
   if (!USE_API) return window.tasks || [];
   const qs = filter?.userId ? `?userId=${encodeURIComponent(filter.userId)}` : '';
-  const r = await fetch(`${API_BASE}/tasks${qs}`, { credentials:'include' });
+  const r = await fetch(`${API_BASE}/tasks${qs}`, { credentials:'include', headers:{ ...authHeader() } });
   return r.json();
 }
-
 async function repoCreate(task){
   if (!USE_API) return task;
   const r = await fetch(`${API_BASE}/tasks`, {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    credentials:'include', body: JSON.stringify(task)
+    method:'POST',
+    headers:{ 'Content-Type':'application/json', ...authHeader() },
+    credentials:'include',
+    body: JSON.stringify(task)
   });
   return r.json();
 }
 async function repoPatch(id, patch){
   if (!USE_API) return patch;
   const r = await fetch(`${API_BASE}/tasks/${id}`, {
-    method:'PATCH', headers:{'Content-Type':'application/json'},
-    credentials:'include', body: JSON.stringify(patch)
+    method:'PATCH',
+    headers:{ 'Content-Type':'application/json', ...authHeader() },
+    credentials:'include',
+    body: JSON.stringify(patch)
   });
   return r.json();
 }
 async function repoDelete(id){
   if (!USE_API) return;
-  await fetch(`${API_BASE}/tasks/${id}`, { method:'DELETE', credentials:'include' });
+  await fetch(`${API_BASE}/tasks/${id}`, {
+    method:'DELETE',
+    credentials:'include',
+    headers:{ ...authHeader() }
+  });
 }
+
 
 async function apiGetUsers(){
   const r = await fetch(`${API_BASE}/auth/users`, { credentials:'include' });

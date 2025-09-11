@@ -7,9 +7,14 @@ async function post(path, data){
     credentials:'include',
     body: JSON.stringify(data)
   });
-  if (!r.ok) throw new Error((await r.json()).error || 'Fehler');
-  return r.json().catch(()=> ({}));
+  const json = await r.json().catch(()=> ({}));
+  if (!r.ok) throw new Error(json.error || 'Fehler');
+
+  if (json.token) localStorage.setItem('token', json.token);
+
+  return json;
 }
+
 
 document.getElementById('login-form')?.addEventListener('submit', async (e)=>{
   e.preventDefault();
