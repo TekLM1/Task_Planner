@@ -31,8 +31,9 @@ router.post('/register', async (req,res)=>{
   if(await User.findOne({email})) return res.status(409).json({error:'email exists'});
   const hash = await bcrypt.hash(password,12);
   const user = await User.create({email,name,passwordHash:hash,role:role==='supervisor'?'supervisor':'user'});
-  setCookie(res,user);
-  res.status(201).json({id:user._id,email:user.email,name:user.name,role:user.role});
+
+  const token = setCookie(res,user);
+  res.status(201).json({ id:user._id, email:user.email, name:user.name, role:user.role, token });
 });
 
 router.post('/login', async (req,res)=>{
@@ -41,8 +42,9 @@ router.post('/login', async (req,res)=>{
   if(!user) return res.status(401).json({error:'login failed'});
   const ok = await bcrypt.compare(password,user.passwordHash);
   if(!ok) return res.status(401).json({error:'login failed'});
-  setCookie(res,user);
-  res.json({id:user._id,email:user.email,name:user.name,role:user.role});
+
+  const token = setCookie(res,user);
+  res.json({ id:user._id, email:user.email, name:user.name, role:user.role, token });
 });
 
 router.post('/logout',(req,res)=>{
