@@ -349,11 +349,10 @@ function toggleMenu() {
 }
 
 
-function hideWelcome() {
-    const overlay = document.getElementById("welcome-overlay");
-    overlay.style.transition = "opacity 0.4s ease";
-    overlay.style.opacity = "0";
-    setTimeout(() => {
-      overlay.style.display = "none";
-    }, 400);
-  }
+async function hideWelcome() {
+  const me = await apiGetMe();
+  if (!me) { location.href = './auth/login.html'; return; }
+  await initApp(); // lädt Tasks, bindet Events, rendert
+  const overlay = document.getElementById('welcome-overlay');
+  if (overlay){ overlay.style.opacity='0'; setTimeout(()=>overlay.style.display='none', 400); }
+}
