@@ -401,7 +401,14 @@ async function hideWelcome() {
     }, 400);
   }
 }
-window.hideWelcome = hideWelcome; // wichtig fuer onclick="hideWelcome()"
+window.hideWelcome = hideWelcome;
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('#welcome-start-btn');
+  if (!btn) return;
+  e.preventDefault();
+  hideWelcome();
+});
 
 
 
