@@ -8,6 +8,7 @@
   font-family: var(--main-font);
   position: relative;
   padding-top: 30px;
+  gap: 12px;
 }
 
 .navbar-title {
@@ -45,9 +46,21 @@
   display: flex;
 }
 
-@media (max-width: 650px) {
-  .burger {
-    display: block;
+/* Top-Bar mit Userinfo/Filter/Logout mittig auf Desktop */
+.top-tools{
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Desktop: Mitte */
+  gap: 8px;
+  width: 100%;
+}
+.top-tools__info{ opacity:.8; }
+.top-tools__select{ min-width: 240px; }
+.top-tools__logout{ }
+
+@media (max-width: 650px){
+  .top-tools{
+    justify-content: flex-end; /* Mobile: rechts, bleibt uebersichtlich */
   }
 }
 
