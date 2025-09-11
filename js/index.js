@@ -95,33 +95,44 @@ let isEditing = false;
 
 let currentFilter = "Alle"; // Neu hinzugefügt
 
-function renderTaskList() {
-  const taskList = document.getElementById("task-list");
-  taskList.innerHTML = "";
+function renderTaskFields(task, editable) {
+  const verantwortlicherControl = editable
+    ? `<select id="edit-verantwortlich" class="top-tools__select">
+         ${['', ...supervisors.map(s => s.name)].map(name=>{
+           const sel = (name === task.verantwortlich) ? 'selected' : '';
+           const label = name ? name : '— auswaehlen —';
+           const val = name || '';
+           return `<option value="${val}" ${sel}>${label}</option>`;
+         }).join('')}
+       </select>`
+    : `<span>${task.verantwortlich || '-'}</span>`;
 
-  const filteredTasks = tasks.filter(task => {
-    if (currentFilter === "Offen") return task.status === "Offen";
-    if (currentFilter === "Erledigt") return task.status === "Erledigt";
-    return true; // "Alle"
-  });
+  document.querySelector(".task-info").innerHTML = `
+    <h2><input type="text" value="${task.titel}" id="edit-titel" placeholder="Titel eingeben…" ${editable ? "" : "disabled"} /></h2>
+    <p><strong>Beschreibung:</strong><br>
+      <textarea id="edit-beschreibung" ${editable ? "" : "disabled"}>${task.beschreibung}</textarea>
+    </p>
+    <p><strong>Zeit Aufwand:</strong>
+      <input type="text" value="${task.zeit}" id="edit-zeit" ${editable ? "" : "disabled"} />
+    </p>
+    <p><strong>Verantwortlicher:</strong>
+      ${verantwortlicherControl}
+    </p>
+    <p><strong>Status:</strong>
+      <input type="text" value="${task.status}" id="edit-status" disabled />
+    </p>
+  `;
 
-  filteredTasks.forEach(task => {
-    const card = document.createElement("div");
-    card.className = "task-card";
-    card.textContent = `📝 ${task.titel || "(Unbenannter Task)"}`;
-    card.dataset.id = task.id;
-
-    card.addEventListener("click", () => {
-      showTaskDetail(task);
+  if (editable) {
+    document.getElementById("edit-titel").addEventListener("input", e => {
+      task.titel = e.target.value; renderTaskList();
     });
-
-    if (selectedTask && selectedTask.id === task.id) {
-      card.classList.add("active");
-    }
-
-    taskList.appendChild(card);
-  });
+    document.getElementById("edit-beschreibung").addEventListener("input", e => task.beschreibung = e.target.value);
+    document.getElementById("edit-zeit").addEventListener("input", e => task.zeit = e.target.value);
+    document.getElementById("edit-verantwortlich").addEventListener("change", e => task.verantwortlich = e.target.value);
+  }
 }
+
 
 async function showTaskDetail(task) {
   selectedTask = task;
@@ -376,7 +387,14 @@ function toggleMenu() {
 async function hideWelcome() {
   const me = await apiGetMe();
   if (!me) { location.href = './auth/login.html'; return; }
-  await initApp(); // lädt Tasks, bindet Events, rendert
+
+  await initApp();
+
   const overlay = document.getElementById('welcome-overlay');
-  if (overlay){ overlay.style.opacity='0'; setTimeout(()=>overlay.style.display='none', 400); }
+  if (overlay){
+    overlay.style.transition = 'opacity 0.4s ease';
+    overlay.style.opacity = '0';
+    setTimeout(()=>{ overlay.style.display='none'; }, 400);
+  }
 }
+
