@@ -2,7 +2,7 @@ let tasks = [];
 const USE_API = true;
 const API_BASE = location.hostname === 'localhost'
   ? 'http://localhost:3001/api'
-  : 'https://web-lula.onrender.com/api';
+  : 'https://task-planner-api-af72.onrender.com/api';
 
 
 const STATUS_UI2API = { 'Offen':'offen', 'Erledigt':'erledigt', 'In Arbeit':'in_arbeit', 'Review':'review' };
