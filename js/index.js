@@ -254,6 +254,8 @@ function renderTaskFields(task, editable) {
 async function ensureTopBar(me){
   const nav = document.querySelector('.navbar') || document.body;
 
+  if (document.querySelector('.top-tools')) return; // schon vorhanden
+
   const holder = document.createElement('div');
   holder.className = 'top-tools';
 
