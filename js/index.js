@@ -306,14 +306,11 @@ async function ensureTopBar(me){
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (IS_PROD) {
-    // Auf der Render-URL: Intro anzeigen, NICHT automatisch starten
     const ov = document.getElementById('welcome-overlay');
-    if (ov) ov.style.display = 'flex';
-    return; // erst der Button "Let's start planning" startet initApp()
+    ov?.classList.add('is-open'); // Intro zeigen
+    return; // Start erst per Button (hideWelcome)
   }
-
-  // Lokal: direkt starten
-  await initApp();
+  await initApp(); // lokal direkt starten
 });
 
 let appReady = false;
@@ -399,10 +396,12 @@ async function hideWelcome() {
     overlay.style.opacity = '0';
     setTimeout(()=>{ 
       overlay.classList.remove('is-open');
-      overlay.classList.add('is-hidden'); 
-      overlay.style.opacity = ''; 
+      overlay.style.display = 'none';
+      overlay.style.opacity = '';
     }, 400);
   }
 }
+window.hideWelcome = hideWelcome; // wichtig fuer onclick="hideWelcome()"
+
 
 
