@@ -1,80 +1,51 @@
-.navbar {
+/* Aktionen rechts sauber ausrichten */
+.navbar-actions{
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: var(--main-background-color);
-  color: var(--main-font-color);
-  padding: 10px 20px;
-  font-family: var(--main-font);
+  gap: .5rem;
+  margin-left: auto;
   position: relative;
-  padding-top: 30px;
-  gap: 12px;
+  z-index: 20;              /* liegt ueber der mittigen Top-Leiste */
 }
 
-.navbar-title {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.burger {
-  display: none;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 6px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.burger:hover {
-  background-color: var(--hover-background-color);
-  transform: scale(1.1);
-}
-
-.navbar-dropdown {
+/* Dropdown-Basis (Mobile default: versteckt) */
+.navbar-dropdown{
   display: none;
   flex-direction: column;
   position: absolute;
   top: 100%;
   right: 0;
-  background-color: var(--main-background-color);
-  padding: 0.5rem;
-  z-index: 1000;
-  gap: 0.3rem;
+  background: var(--main-background-color);
+  padding: .5rem;
+  gap: .4rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,.25);
 }
+.navbar-dropdown.show{ display: flex; }
 
-.navbar-dropdown.show {
-  display: flex;
-}
+/* Burger nur auf Mobile */
+.burger{ display: block; }
 
-/* Top-Bar mit Userinfo/Filter/Logout mittig auf Desktop */
-.top-tools{
-  display: flex;
-  align-items: center;
-  justify-content: center; /* Desktop: Mitte */
-  gap: 8px;
-  width: 100%;
-}
-.top-tools__info{ opacity:.8; }
-.top-tools__select{ min-width: 240px; }
-.top-tools__logout{ }
-
-@media (max-width: 650px){
-  .top-tools{
-    justify-content: flex-end; /* Mobile: rechts, bleibt uebersichtlich */
-  }
-}
-
+/* Desktop: Dropdown immer sichtbar als Reihe, Burger aus */
 @media (min-width: 651px){
-  .navbar{ position: relative; } 
+  .burger{ display: none; }
 
-  .top-tools{
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: auto;              
-    justify-content: center;  
+  .navbar-dropdown{
+    display: flex !important;
+    position: static;
+    flex-direction: row;
+    gap: .6rem;
+    box-shadow: none;
+    padding: 0;
+    background: transparent;
   }
+}
 
-  .navbar-title { margin-right: auto; }
-  .navbar-actions { margin-left: auto; }
+/* Mittlere Top-Leiste zentriert, aber unter Buttons (z-index kleiner) */
+.top-tools{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  justify-content: center;
+  z-index: 10;     /* < navbar-actions (20) */
 }
