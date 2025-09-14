@@ -28,6 +28,16 @@
 /* Desktop: Dropdown immer sichtbar als Reihe, Burger aus */
 @media (min-width: 651px){
   .burger{ display:none; }
+  .navbar {
+  display: flex;
+  align-items: center;      /* Titel und Buttons auf gleiche Hoehe */
+  gap: 12px;
+  background-color: var(--main-background-color);
+  color: var(--main-font-color);
+  padding: 14px 24px;       /* Abstand vom linken/rechten Rand */
+  position: relative;
+}
+
   .navbar-dropdown{
     display: flex !important;
     position: static;
