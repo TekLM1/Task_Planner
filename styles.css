@@ -80,6 +80,8 @@
 @media (max-width: 650px){
   .aside-action-button{
     position: fixed;
+    padding-left: 16px;
+    padding-right: 16px;
     left: 12px;
     bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     z-index: 9999;          /* ueber allem sichtbar */
