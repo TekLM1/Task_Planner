@@ -76,3 +76,20 @@
   border-color: var(--input-hover);
 }
 .task-actions button:active{ transform: translateY(1px); }
+
+@media (max-width: 650px){
+  .aside-action-button{
+    position: fixed;
+    left: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    z-index: 9999;          /* ueber allem sichtbar */
+    white-space: nowrap;    /* kein Zeilenumbruch bei "Tasks verbergen" */
+  }
+  .new-task-button{
+    position: fixed;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    z-index: 9999;
+  }
+}
+
