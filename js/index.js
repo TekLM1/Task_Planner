@@ -271,58 +271,31 @@ async function createNewTask() {
   showTaskDetail(t);
 }
 
-// ====== Top Bar ======
 async function ensureTopBar(me){
-  const nav = document.querySelector('.navbar') || document.body;
-  if (document.querySelector('.top-tools')) return; // schon vorhanden
-
-  const holder = document.createElement('div');
-  holder.className = 'top-tools';
-
-  const info = document.createElement('span');
-  info.className = 'top-tools__info';
-  info.textContent = `${me.name || me.email} (${me.role})`;
-  holder.appendChild(info);
-
-  if (me.role === 'supervisor') {
-    const userSelect = document.createElement('select');
-    userSelect.className = 'top-tools__select';
-    const optAll = document.createElement('option');
-    optAll.value = ''; optAll.textContent = 'Alle Benutzer';
-    userSelect.appendChild(optAll);
-
-    const users = await apiGetUsers();
-    users.forEach(u => {
-      const o = document.createElement('option');
-      o.value = u.id;
-      o.textContent = `${u.name} (${u.email})`;
-      userSelect.appendChild(o);
+  // 1) Logout-Icon klicken -> ausloggen
+  const logout = document.getElementById('logout-link');
+  if (logout && !logout._bound){
+    logout.addEventListener('click', async (e)=>{
+      e.preventDefault();
+      await apiLogout();
+      location.href = './auth/login.html';
     });
-
-    userSelect.addEventListener('change', async () => {
-      const userId = userSelect.value || null;
-      const list = await repoList(userId ? { userId } : undefined);
-      tasks = list.map(toViewModel);
-      renderTaskList();
-    });
-
-    holder.appendChild(userSelect);
+    logout._bound = true;
   }
 
-  const logout = document.createElement('a');
-  logout.href = '#';
-  logout.id = 'logout-link';
-  logout.className = 'top-tools__logout';
-  logout.textContent = 'Logout';
-  logout.addEventListener('click', async (e)=>{
-    e.preventDefault();
-    await apiLogout();
-    location.href = './auth/login.html';
-  });
+  // 2) User-Badge unter den Buttons anzeigen
+  const actions = document.querySelector('.navbar-actions');
+  if (!actions) return;
 
-  holder.appendChild(logout);
-  nav.appendChild(holder);
+  let badge = document.querySelector('.user-badge');
+  if (!badge){
+    badge = document.createElement('div');
+    badge.className = 'user-badge';
+    actions.appendChild(badge);
+  }
+  badge.textContent = `${me.name || me.email} (${me.role})`;
 }
+
 
 // ====== App Start ======
 document.addEventListener('DOMContentLoaded', async () => {
