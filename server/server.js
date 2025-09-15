@@ -21,9 +21,16 @@ app.set('trust proxy', 1);
  * - credentials: true fuer Cookies/Authorization Header
  */
 const allowed = (process.env.CORS_ORIGIN || '')
-  .split(',')
-  .map(s => s.trim())
-  .filter(Boolean);
+  .split(',').map(s => s.trim()).filter(Boolean);
+app.use(cors({
+  origin(origin, cb) {
+    if (!origin) return cb(null, true);
+    if (allowed.includes(origin)) return cb(null, true);
+    return cb(new Error('CORS blocked: ' + origin)); // ← wirf Fehler => 502 bei Preflight
+  },
+  credentials: true
+}));
+
 
 app.use(cors({
   origin(origin, cb) {
