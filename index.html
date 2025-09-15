@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<!-- Grundstruktur des HTML-Dokuments -->
 <html lang="en">
   <head>
-    <!-- Kopfbereich: Zeichensatz, mobiles Layout, Titel, Styles & Favicon -->
     <meta charset="UTF-8" />
+    <!-- Responsive Layout für Mobile -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Planner</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="Favicon.png" type="image/png">
   </head>
   <body>
-    <!-- Navigation oben: Titel + Burger-Menü für kleinere Screens -->
+    <!-- Navbar: Titel + Burger-Menü -->
     <nav class="navbar">
       <h1 class="navbar-title">Task Planner</h1>
       <div class="navbar-actions">
         <div class="burger" onclick="toggleMenu()">&#9776;</div>
-        <!-- Ausklapp-Menü: Filter, Neuer Task, Logout -->
+        <!-- Dropdown mit Aktionen -->
         <div class="navbar-dropdown" id="burger-menu">
           <a href="#" class="nav-action-button" id="show-open-tasks">Offene Tasks</a>
           <a href="#" class="nav-action-button" id="show-done-tasks">Abgeschlossene Tasks</a>
@@ -25,34 +24,33 @@
       </div>
     </nav>
 
-    <!-- Hauptbereich: Zwei-Spalten-Layout (Liste links, Details rechts) -->
+    <!-- Hauptcontainer: Sidebar links, Details rechts -->
     <div class="task-container">
 
-      <!-- Seitenleiste: Task-Liste (auf Mobile ausgeblendet via hidden-mobile) -->
+      <!-- Sidebar: Taskliste (mobil ausgeblendet via hidden-mobile) -->
       <aside class="task-aside hidden-mobile">
         <div id="task-list"></div>
       </aside>
 
-      <!-- Hauptbereich rechts: Details des aktuell gewählten Tasks -->
+      <!-- Hauptbereich: Details zum ausgewählten Task -->
       <main class="task-details">
-        <!-- Task-Informationen (Platzhalter bis ein Task gewählt wird) -->
         <section class="task-info">
           <h2>[Angewählter Task]</h2>
-          <p><strong>Titel:</strong> </p>
+          <p><strong>Titel:</strong></p>
           <p><strong>Beschreibung:</strong></p>
-          <p><strong>Zeit Aufwand:</strong> </p>
-            <p><strong>Verantwortlicher:</strong></p>
+          <p><strong>Zeit Aufwand:</strong></p>
+          <p><strong>Verantwortlicher:</strong></p>
           <p><strong>Status:</strong></p>
         </section>
 
-        <!-- Aktionen zum Task: Bearbeiten, Status ändern, Löschen -->
+        <!-- Buttons: Editieren / Status ändern / Löschen -->
         <section class="task-actions">
           <button>Editieren</button>
           <button>Status ändern</button>
           <button>Löschen</button>
         </section>
 
-        <!-- Kommentarbereich zum Task -->
+        <!-- Kommentar zum Task -->
         <section class="task-comment">
           <h3>Kommentar zum Task</h3>
           <textarea placeholder="Kommentar eingeben..."></textarea>
@@ -60,11 +58,11 @@
       </main>
     </div>
 
-    <!-- Mobile Buttons: Liste anzeigen & neuen Task anlegen (nur auf Mobile sichtbar) -->
+    <!-- Mobile Buttons: Sidebar öffnen & Task anlegen -->
     <button class="aside-action-button hidden-desktop">Tasks anzeigen</button>
     <button class="new-task-button hidden-desktop" onclick="createNewTask()">➕ Neuer Task</button>
 
-    <!-- Footer unten: Einfache Infos + kleiner Gag beim Hover -->
+    <!-- Footer: Infos + Easter-Egg beim Hover -->
     <footer class="site-footer">
       <div class="footer-content">
         <span>©Teko LULA</span>
@@ -72,9 +70,7 @@
         <span>Impressum</span>
         <span class="contact">
           Kontakt
-          <span class="tooltip">
-            Do not contact us
-          </span>
+          <span class="tooltip">Do not contact us</span>
           <span class="hover-image">
             <img src="html/footer/Gotcha.png" alt="Gotcha" />
           </span>
@@ -82,7 +78,7 @@
       </div>
     </footer>
 
-    <!-- Begrüssungs-Overlay: Wird beim Start angezeigt und kann geschlossen werden -->
+    <!-- Begrüßungs-Overlay beim Start -->
     <div id="welcome-overlay">
       <div class="welcome-content">
         <img src="web-lula-logo.png" alt="Web-LuLa Logo">
@@ -91,7 +87,7 @@
       </div>
     </div>
 
-    <!-- JavaScript-Dateien: Hauptlogik + Authentifizierung (defer = nach HTML laden) -->
+    <!-- Skripte: Hauptlogik + Auth -->
     <script src="js/index.js?v=8" defer></script>
     <script src="auth/auth.js?v=7" defer></script>
   </body>
