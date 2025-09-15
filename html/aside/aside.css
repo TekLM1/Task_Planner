@@ -1,12 +1,13 @@
-.task-aside {
-  width: 270px;
-  min-width: 270px;
-  max-height: calc(100vh - 450px);
-  padding-bottom: 20px;
-  overflow-y: auto;
-  overflow-x: hidden;
-
-}
+  .task-aside{
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 64px; /* unter der Navbar, ggf. anpassen */
+    bottom: 88px; /* Platz fuer die fixen Buttons unten */
+    z-index: 900; /* unter den Buttons bleiben */
+    overflow-y: auto;      /* Liste scrollt intern */
+    padding: 12px;
+  }
 
 .task-card {
   background-color: var(--second-background-color);

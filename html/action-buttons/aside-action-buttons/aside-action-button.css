@@ -1,6 +1,6 @@
 .aside-action-button {
-  position: fixed;
-  bottom: 20px;
+  position: fixed !important;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   left: 20px;
   background-color: var(--second-background-color);
   color: var(--main-font-color);
