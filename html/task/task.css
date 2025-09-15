@@ -1,3 +1,4 @@
+/* Basis-Layout */
 body {
   margin: 0;
   background-color: var(--main-background-color);
@@ -5,40 +6,34 @@ body {
   font-family: var(--main-font);
 }
 
+/* Container für Taskliste (aside) + Details (main) */
 .task-container {
-  display: flex;
+  display: flex;       /* Sidebar + Details nebeneinander */
   gap: 20px;
   padding: 20px;
-  /* display: grid;
-  grid-template-areas:
-    "header header"
-    "aside main"
-    "footer footer";
-  grid-template-columns: 200px 1fr;
-  grid-template-rows: auto 1fr auto;
-  height: 100vh; */
 }
 
+/* Rechte Seite: Details-Bereich */
 .task-details {
-  flex: 1;
+  flex: 1;                         /* nimmt restliche Breite */
   background-color: var(--main-background-color);
   padding: 20px;
   border-radius: 12px;
   color: var(--main-font-color);
 }
 
+/* Textabstände im Info-Bereich */
 .task-info p {
   margin: 0.5rem; 
 }
 
-.task-info textarea {
-  font-family: var(--main-font);
-}
-
+/* Schriftarten angleichen */
+.task-info textarea,
 .task-info input {
   font-family: var(--main-font);
 }
 
+/* Readonly-Felder: transparent und nicht editierbar */
 .task-info input[disabled],
 .task-info textarea[disabled] {
   background-color: transparent;
@@ -46,10 +41,11 @@ body {
   border: none;
   outline: none;
   resize: none;
-  pointer-events: none; /* verhindert Cursor & Klicks */
+  pointer-events: none; /* kein Cursor/Klicks */
   font-family: var(--main-font);
 }
 
+/* Button-Gruppe unter den Details */
 .task-actions {
   margin-top: 2rem;
   display: flex;
@@ -71,6 +67,7 @@ body {
   background-color: var(--hover-background-color);
 }
 
+/* Kommentarbereich unter den Actions */
 .task-comment {
   margin-top: 2rem;
   margin-bottom: 2rem;
@@ -87,14 +84,14 @@ body {
   border: none;
   border-radius: 6px;
   font-family: var(--main-font);
-  resize: vertical;
+  resize: vertical; /* Höhe anpassbar */
 }
 
+/* Markierung für aktiven Task in der Liste */
 .task-card.active {
   background-color: #4a90e2;
   color: white;
 }
-
 
 /* Mobile-Optimierung */
 @media (max-width: 650px) {
@@ -106,9 +103,8 @@ body {
     grid-template-columns: 1fr;
   }
 
-
+  /* Menü-Button sichtbar auf Mobile */
   .menu-toggle {
     display: block;
   }
-
 }

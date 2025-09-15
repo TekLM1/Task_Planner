@@ -9,10 +9,17 @@ const taskRoutes = require('./routes/tasks');
 
 const app = express();
 
-// hinter Proxy (Render) → korrektes HTTPS / Cookies
+/**
+ * Proxy-Setup (z. B. Render/Heroku)
+ * - sorgt fuer korrekte HTTPS-Infos und Cookie-Flags
+ */
 app.set('trust proxy', 1);
 
-// CORS erlaubte Origins aus .env
+/**
+ * CORS
+ * - erlaubte Origins kommen aus .env (CORS_ORIGIN, komma-getrennt)
+ * - credentials: true fuer Cookies/Authorization Header
+ */
 const allowed = (process.env.CORS_ORIGIN || '')
   .split(',')
   .map(s => s.trim())
@@ -20,22 +27,30 @@ const allowed = (process.env.CORS_ORIGIN || '')
 
 app.use(cors({
   origin(origin, cb) {
-    if (!origin) return cb(null, true);            // z. B. curl/Postman
+    if (!origin) return cb(null, true);            // z. B. curl/Postman ohne Origin
     if (allowed.includes(origin)) return cb(null, true);
     return cb(new Error('CORS blocked: ' + origin));
   },
   credentials: true
 }));
 
-app.use(express.json());
-app.use(cookieParser());
+/** Parser */
+app.use(express.json());     // JSON-Body
+app.use(cookieParser());     // Cookies lesen/schreiben
 
-app.get('/api/health', (_req,res)=>res.json({ok:true}));
+/** Healthcheck fuer Uptime/Monitoring */
+app.get('/api/health', (_req, res) => res.json({ ok: true }));
+
+/** API-Routen */
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 
+/**
+ * DB-Connect + Server-Start
+ * - bricht bei Verbindungsfehler ab (exit 1)
+ */
 mongoose.connect(process.env.MONGODB_URI)
-  .then(()=> {
+  .then(() => {
     const port = process.env.PORT || 3001;
     app.listen(port, () => console.log(`API laeuft auf http://localhost:${port}`));
   })

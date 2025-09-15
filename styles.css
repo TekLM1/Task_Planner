@@ -1,3 +1,4 @@
+/* Imports aller Teilbereiche */
 @import url("variables.css");
 @import url("./html/action-buttons/nav-action-buttons/nav-action-button.css");
 @import url("./html/action-buttons/aside-action-buttons/aside-action-button.css");
@@ -7,15 +8,16 @@
 @import url("./html/body/body.css");
 @import url("./html/task/task.css");
 
+/* Reset: Grundlayout vereinheitlichen */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* ========== Modern Forms ========== */
-:root{
-  --radius: 12px;
+/* Form-Design Variablen und Standardwerte */
+:root {
+  --radius: 12px;   /* Standard-Rundung */
   --input-bg: color-mix(in oklab, var(--second-background-color) 88%, black 12%);
   --input-border: color-mix(in oklab, var(--font-color) 20%, transparent);
   --input-hover: color-mix(in oklab, var(--font-color) 40%, transparent);
@@ -24,6 +26,7 @@
   --shadow-md: 0 4px 16px rgba(0,0,0,.12);
 }
 
+/* Labels im Task-Detailformular */
 .task-info label {
   display: grid;
   gap: .4rem;
@@ -32,6 +35,7 @@
   color: color-mix(in oklab, var(--font-color) 82%, transparent);
 }
 
+/* Inputs, Textareas, Selects: Basis-Styling */
 .task-info input,
 .task-info textarea,
 .task-info select {
@@ -45,16 +49,23 @@
   color: var(--font-color);
   outline: none;
   transition: border-color .15s ease, box-shadow .15s ease, background .2s;
-  box-shadow: var(--shadow-sm) inset;
+  box-shadow: var(--shadow-sm) inset;  /* leichter Inset-Schatten */
 }
 
+/* Platzhalter etwas abgedunkelt */
 .task-info input::placeholder,
-.task-info textarea::placeholder { opacity:.65; }
+.task-info textarea::placeholder { 
+  opacity: .65; 
+}
 
+/* Hover-Effekt: Rahmen dunkler */
 .task-info input:hover,
 .task-info textarea:hover,
-.task-info select:hover { border-color: var(--input-hover); }
+.task-info select:hover { 
+  border-color: var(--input-hover); 
+}
 
+/* Fokus-Effekt: farbiger Rahmen + Glow */
 .task-info input:focus,
 .task-info textarea:focus,
 .task-info select:focus {
@@ -62,6 +73,7 @@
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--input-focus) 35%, transparent);
 }
 
+/* Buttons im Task-Detailbereich */
 .task-actions button {
   border: 1px solid var(--input-border);
   border-radius: calc(var(--radius) - 2px);
@@ -72,10 +84,13 @@
   transition: transform .06s ease, background .15s ease, border-color .15s ease;
 }
 
+/* Hover: Hintergrundfarbe und Rand */
 .task-actions button:hover {
   background: var(--hover-background-color);
   border-color: var(--input-hover);
 }
 
-.task-actions button:active { transform: translateY(1px); }
-
+/* Active: leichter Klick-Effekt */
+.task-actions button:active { 
+  transform: translateY(1px); 
+}

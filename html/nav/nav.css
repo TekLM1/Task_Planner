@@ -1,56 +1,66 @@
-  .navbar {
+/* Navbar (Titel links, Aktionen rechts) */
+.navbar {
   display: flex;
-  align-items: center;      
+  align-items: center;        /* Titel und Aktionen auf eine Hoehe */
   gap: 12px;
   background-color: var(--main-background-color);
   color: var(--main-font-color);
-  padding: 14px 24px;       
+  padding: 14px 24px;         /* Abstand links/rechts */
   position: relative;
-}
-.navbar-actions{
-  display: flex;
-  flex-direction: column;   /* oben: Buttons, unten: User-Badge */
-  align-items: flex-end;
-  gap: .35rem;
-  margin-left: auto;
-  position: relative;
-  z-index: 20;              /* ueber evtl. mittigen Leisten */
 }
 
-/* Dropdown-Basis (Mobile default: versteckt) */
-.navbar-dropdown{
+/* Container fuer Actions rechts (Buttons, Burger, User-Badge) */
+.navbar-actions {
+  display: flex;
+  flex-direction: column;     /* Mobil: Buttons untereinander */
+  align-items: flex-end;
+  gap: .35rem;
+  margin-left: auto;          /* schiebt nach rechts */
+  position: relative;
+  z-index: 20;                /* ueber evtl. mittige Leisten */
+}
+
+/* Dropdown-Menue (Mobil standardmaessig versteckt) */
+.navbar-dropdown {
   display: none;
   flex-direction: column;
   position: absolute;
-  top: 100%;
+  top: 100%;                  /* unterhalb der Navbar */
   right: 0;
   background-color: var(--main-background-color);
   padding: .5rem;
   gap: .4rem;
   box-shadow: 0 8px 20px rgba(0,0,0,.25);
 }
-.navbar-dropdown.show{ display: flex; }
 
-/* Burger nur auf Mobile */
-.burger{ display: block; }
-
-/* Desktop: Dropdown immer sichtbar als Reihe, Burger aus */
-@media (min-width: 651px){
-  .burger{ display:none; }
-  .navbar {
-  display: flex;
-  align-items: center;      /* Titel und Buttons auf gleiche Hoehe */
-  gap: 12px;
-  background-color: var(--main-background-color);
-  color: var(--main-font-color);
-  padding: 14px 24px;       /* Abstand vom linken/rechten Rand */
-  position: relative;
+/* Dropdown sichtbar, wenn .show-Klasse gesetzt */
+.navbar-dropdown.show { 
+  display: flex; 
 }
 
-  .navbar-dropdown{
-    display: flex !important;
-    position: static;
-    flex-direction: row;
+/* Burger-Icon nur mobil sichtbar */
+.burger { 
+  display: block; 
+}
+
+/* Ab Desktop: Burger ausblenden, Dropdown immer sichtbar (in Reihe) */
+@media (min-width: 651px) {
+  .burger { display: none; }
+
+  .navbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: var(--main-background-color);
+    color: var(--main-font-color);
+    padding: 14px 24px;
+    position: relative;
+  }
+
+  .navbar-dropdown {
+    display: flex !important;  /* dauerhaft sichtbar */
+    position: static;          /* normal im Flow */
+    flex-direction: row;       /* nebeneinander */
     gap: .6rem;
     box-shadow: none;
     background: transparent;
@@ -58,22 +68,21 @@
   }
 }
 
-/* Logout-Icon wie die Buttons, aber kompakter */
-.nav-action-button.icon-only{
+/* Logout-Icon kompakter als Standard-Buttons */
+.nav-ion-button.icon-only {
   min-width: 2.2rem;
   height: 2.2rem;
   padding: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem; /* Icon etwas groesser */
+  font-size: 1.1rem;           /* Icon etwas groesser */
   line-height: 1;
 }
 
-/* User-Badge unter den Buttons */
-.user-badge{
+/* User-Badge (zeigt Name/Role des Users) */
+.user-badge {
   font-size: 12px;
   opacity: .8;
   padding-right: .2rem;
 }
-

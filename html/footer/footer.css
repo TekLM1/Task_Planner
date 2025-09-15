@@ -1,3 +1,5 @@
+/* Grundlayout: Body auf volle Höhe,
+   damit Footer unten bleibt (margin-top:auto) */
 html, body {
   height: 100%;
   margin: 0;
@@ -6,6 +8,7 @@ html, body {
   flex-direction: column;
 }
 
+/* Footer-Container */
 .site-footer {
   background-color: var(--main-background-color);
   color: var(--main-font-color);
@@ -13,12 +16,13 @@ html, body {
   text-align: center;
   font-family: var(--main-font);
   font-size: 0.9rem;
-  margin-top: auto;
+  margin-top: auto;               /* schiebt Footer ans Seitenende */
 }
 
+/* Inhalt im Footer: Flex, zentriert mit Abständen */
 .footer-content {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap;                /* bricht bei kleinen Screens um */
   gap: 1rem;
   justify-content: center;
   align-items: center;
@@ -30,6 +34,7 @@ html, body {
   align-items: center;
 }
 
+/* Kontakt-Element mit Tooltip & Hover-Image */
 .contact {
   cursor: help;
   position: relative;
@@ -38,6 +43,7 @@ html, body {
   align-items: center;
 }
 
+/* Tooltip (erscheint neben "Kontakt") */
 .tooltip {
   visibility: hidden;
   opacity: 0;
@@ -57,11 +63,13 @@ html, body {
   pointer-events: none;
 }
 
+/* Tooltip sichtbar bei Hover */
 .contact:hover .tooltip {
   visibility: visible;
   opacity: 1;
 }
 
+/* Hover-Bild: versteckt über Footer */
 .hover-image img {
   max-width: 150px;
   height: auto;
@@ -69,7 +77,7 @@ html, body {
 }
 .contact .hover-image {
   position: absolute;
-  bottom: 120%;
+  bottom: 120%;                   /* oberhalb vom Text */
   left: 100%;
   transform: translateX(10px);
   opacity: 0;
@@ -78,11 +86,13 @@ html, body {
   z-index: 10;
 }
 
+/* Bild sichtbar bei Hover */
 .contact:hover .hover-image {
   opacity: 1;
   pointer-events: auto;
 }
 
+/* Mobile: Footer-Content untereinander */
 @media (max-width: 650px) {
   .footer-content {
     flex-direction: column;

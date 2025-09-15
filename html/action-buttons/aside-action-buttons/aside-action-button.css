@@ -1,7 +1,29 @@
+/* Button zum Ein-/Ausblenden der Sidebar (Mobil unten links) */
 .aside-action-button {
   position: fixed !important;
-  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px)); /* Abstand + Safe-Area (z. B. iPhone Notch) */
   left: 20px;
+  background-color: var(--second-background-color);
+  color: var(--main-font-color);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-family: var(--main-font);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 1000;                /* immer über Content */
+  transition: background 0.2s;
+  white-space: nowrap;          /* Text nicht umbrechen */
+  min-width: 140px;             /* Platz für "Tasks verbergen" */
+  text-align: center;
+}
+
+/* Button zum Anlegen neuer Tasks (Mobil unten rechts) */
+.new-task-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
   background-color: var(--second-background-color);
   color: var(--main-font-color);
   border: none;
@@ -13,41 +35,17 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   z-index: 1000;
   transition: background 0.2s;
-  white-space: nowrap;      /* kein Umbruch bei langem Text */
-  min-width: 140px;         /* genug Platz für "Tasks verbergen" */
-  text-align: center;
 }
 
-.new-task-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: var(--second-background-color);
-    color: var(--main-font-color);
-    border: none;
-    border-radius: 8px;
-    padding: 12px 24px;
-    font-size: 16px;
-    font-family: var(--main-font);
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    z-index: 1000;
-    transition: background 0.2s;
-}
-
-.new-task-button:hover {
-    background-color: var(--hover-background-color);
-}
+/* Hover-Effekte für beide Buttons */
+.new-task-button:hover,
 .aside-action-button:hover {
-        background-color: var(--hover-background-color);
+  background-color: var(--hover-background-color);
 }
 
+/* Ab 650px (Tablet/Desktop): Mobile-Buttons ausblenden */
 @media (min-width: 650px) {
-    .hidden-desktop {
-        display: none;
-    }
-    
+  .hidden-desktop {
+    display: none;
+  }
 }
-
-
-

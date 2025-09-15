@@ -5,6 +5,12 @@ const User = require('../models/User');
 const router = express.Router();
 const { auth, requireSupervisor } = require('../middleware/auth');
 
+/**
+ * setCookie(res, user)
+ * - erstellt ein JWT (7 Tage gueltig)
+ * - legt es als httpOnly-Cookie ab (secure + SameSite je nach PROD)
+ * - gibt das Token auch zurueck (fuer Frontend localStorage)
+ */
 function setCookie(res, user){
   const token = jwt.sign(
     { sub: user._id.toString(), role: user.role, email: user.email, name: user.name },
@@ -14,32 +20,52 @@ function setCookie(res, user){
 
   const prod = process.env.NODE_ENV === 'production';
   res.cookie('token', token, {
-    httpOnly: true,
-    sameSite: prod ? 'None' : 'Lax',
-    secure: prod,
-    maxAge: 7*24*60*60*1000
+    httpOnly: true,                 // nicht per JS lesbar
+    sameSite: prod ? 'None' : 'Lax',// cross-site nur in PROD ermoeglichen
+    secure: prod,                   // nur HTTPS in PROD
+    maxAge: 7*24*60*60*1000         // 7 Tage
   });
 
   return token;
 }
 
-
-
+/**
+ * POST /auth/register
+ * - erstellt neuen User (Email unique)
+ * - Passwort wird gehasht
+ * - setzt Login-Cookie + gibt Token/Profildaten zurueck
+ */
 router.post('/register', async (req,res)=>{
   const {email,name,password,role} = req.body;
-  if(!email||!name||!password) return res.status(400).json({error:'fields missing'});
-  if(await User.findOne({email})) return res.status(409).json({error:'email exists'});
+
+  if(!email||!name||!password)
+    return res.status(400).json({error:'fields missing'});
+
+  if(await User.findOne({email}))
+    return res.status(409).json({error:'email exists'});
+
   const hash = await bcrypt.hash(password,12);
-  const user = await User.create({email,name,passwordHash:hash,role:role==='supervisor'?'supervisor':'user'});
+  const user = await User.create({
+    email,
+    name,
+    passwordHash: hash,
+    role: role === 'supervisor' ? 'supervisor' : 'user'
+  });
 
   const token = setCookie(res,user);
   res.status(201).json({ id:user._id, email:user.email, name:user.name, role:user.role, token });
 });
 
+/**
+ * POST /auth/login
+ * - prueft Email/Passwort
+ * - setzt Login-Cookie + gibt Token/Profildaten zurueck
+ */
 router.post('/login', async (req,res)=>{
   const {email,password}=req.body;
   const user = await User.findOne({email});
   if(!user) return res.status(401).json({error:'login failed'});
+
   const ok = await bcrypt.compare(password,user.passwordHash);
   if(!ok) return res.status(401).json({error:'login failed'});
 
@@ -47,23 +73,44 @@ router.post('/login', async (req,res)=>{
   res.json({ id:user._id, email:user.email, name:user.name, role:user.role, token });
 });
 
+/**
+ * POST /auth/logout
+ * - loescht das httpOnly-Cookie
+ */
 router.post('/logout',(req,res)=>{
   res.clearCookie('token');
   res.status(204).end();
 });
 
+/**
+ * GET /auth/me
+ * - liest JWT direkt aus Cookie
+ * - gibt Payload (sub, role, email, name) zurueck
+ */
 router.get('/me',(req,res)=>{
   try{
     const p = jwt.verify(req.cookies?.token, process.env.JWT_SECRET);
     res.json(p);
-  }catch{ res.status(401).json({error:'unauthorized'}); }
+  }catch{
+    res.status(401).json({error:'unauthorized'});
+  }
 });
 
+/**
+ * GET /auth/users
+ * - nur fuer Supervisors
+ * - gibt Liste aller User (id, email, name, role)
+ */
 router.get('/users', auth, requireSupervisor, async (req, res) => {
   const users = await User.find({}, { _id:1, email:1, name:1, role:1 }).sort({ name: 1 });
   res.json(users.map(u => ({ id: u._id, email: u.email, name: u.name, role: u.role })));
 });
 
+/**
+ * GET /auth/supervisors
+ * - nur eingeloggte User
+ * - gibt Liste aller Supervisors (id, email, name)
+ */
 router.get('/supervisors', auth, async (req, res) => {
   const users = await User.find({ role: 'supervisor' }, { _id:1, email:1, name:1 }).sort({ name: 1 });
   res.json(users.map(u => ({ id: u._id, email: u.email, name: u.name })));

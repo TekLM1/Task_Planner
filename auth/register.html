@@ -2,14 +2,20 @@
 <html lang="de">
 <head>
   <meta charset="utf-8" />
+  <!-- Responsive Layout für Mobile -->
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Registrieren – Web-LuLa</title>
+
+  <!-- Globale Styles -->
   <link rel="stylesheet" href="../variables.css" />
   <link rel="stylesheet" href="../styles.css" />
 </head>
 <body>
+  <!-- Registrierungs-Box -->
   <div class="auth-wrap">
     <h1>Registrieren</h1>
+
+    <!-- Registrierungsformular -->
     <form id="reg-form">
       <label>Name
         <input type="text" name="name" required>
@@ -26,11 +32,19 @@
           <option value="supervisor">Vorgesetzter</option>
         </select>
       </label>
+
+      <!-- Registrierungs-Button -->
       <button type="submit">Konto anlegen</button>
+
+      <!-- Link zurück zum Login -->
       <p>Schon Konto? <a href="./login.html">Login</a></p>
+
+      <!-- Fehlerausgabe -->
       <p id="err" style="color:#f77"></p>
     </form>
   </div>
+
+  <!-- Auth-Logik (Login/Register) -->
   <script src="./auth.js"></script>
 </body>
 </html>
