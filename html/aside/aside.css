@@ -1,4 +1,5 @@
 .task-aside {
+  /* Mobile First */
   position: fixed;
   left: 0; 
   right: 0;
@@ -11,6 +12,7 @@
   box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
 
+/* Karten im Aside */
 .task-card {
   background-color: var(--second-background-color);
   border-left: 4px solid #3a9efd;
@@ -38,7 +40,9 @@
 }
 
 /* Mobile Standard: aside ist sichtbar, wenn aside-open */
-.hidden-mobile { display: none; }
+.hidden-mobile { 
+  display: none; 
+}
 
 /* Ab Tablet/Desktop sichtbar */
 @media (min-width: 650px) {
@@ -46,8 +50,10 @@
 
   .task-aside {
     position: relative;
-    top: 0;
-    bottom: 0;
+    top: auto;
+    bottom: auto;
+    height: calc(100vh - 64px - 24px); /* volle Höhe, scrollt intern */
+    overflow-y: auto;
     box-shadow: none;
     background: transparent;
   }
