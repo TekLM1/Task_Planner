@@ -346,13 +346,24 @@ function bindEventsOnce(){
   });
 
   // Mobile Aside Toggle
-  const asideToggleBtn = document.querySelector('.aside-action-button');
-  asideToggleBtn?.addEventListener('click', () => {
-    const aside = document.querySelector('.task-aside');
+const asideToggleBtn = document.querySelector(".aside-action-button");
+if (asideToggleBtn) {
+  asideToggleBtn.addEventListener("click", () => {
+    const aside = document.querySelector(".task-aside");
     if (!aside) return;
-    const isHidden = aside.classList.toggle('hidden-mobile');
-    asideToggleBtn.textContent = isHidden ? 'Tasks anzeigen' : 'Tasks verbergen';
+
+    const isHidden = aside.classList.toggle("hidden-mobile");
+    asideToggleBtn.textContent = isHidden ? "Tasks anzeigen" : "Tasks verbergen";
+
+    // Body-Status anpassen → Rest ausblenden/einblenden
+    if (!isHidden) {
+      document.body.classList.add("aside-open");
+    } else {
+      document.body.classList.remove("aside-open");
+    }
   });
+}
+
 
   eventsBound = true;
 }

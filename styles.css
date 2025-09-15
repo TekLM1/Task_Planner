@@ -78,16 +78,20 @@
 .task-actions button:active{ transform: translateY(1px); }
 
 
+/* ========== Responsive Styles for Mobile (max-width: 650px) ========== */
+
 @media (max-width: 650px){
+  /* Keep aside-action-button fixed and visible above all content */
   .aside-action-button{
     position: fixed;
     padding-left: 16px;
     padding-right: 16px;
     left: 12px;
     bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    z-index: 9999;          /* ueber allem sichtbar */
-    white-space: nowrap;    /* kein Zeilenumbruch bei "Tasks verbergen" */
+    z-index: 9999;          /* ensure it's above all other elements */
+    white-space: nowrap;    /* prevent line break for "Tasks verbergen" */
   }
+  /* Keep new-task-button fixed at the bottom right */
   .new-task-button{
     position: fixed;
     right: 12px;
@@ -95,6 +99,18 @@
     z-index: 9999;
   }
 
-
+  /* Standard: App sichtbar */
+.task-container,
+.site-footer {
+  transition: opacity .3s ease;
 }
 
+/* Wenn Aside aktiv ist → Rest ausblenden */
+body.aside-open .task-container,
+body.aside-open .site-footer,
+body.aside-open .navbar {
+  opacity: 0;
+  pointer-events: none;  /* Klicks blocken */
+}
+
+}
