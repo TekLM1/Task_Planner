@@ -1,22 +1,11 @@
 .task-aside {
   width: 270px;
   min-width: 270px;
-  max-height: calc(100vh - 80px);
-  /*height: 100dvh;
-  max-height: 100dvh;*/
-
+  max-height: calc(100vh - 140px);
+  padding-bottom: 20px;
   overflow-y: auto;
   overflow-x: hidden;
-  /* background-color: var(--main-background-color);
-    color: var(--main-font-color);
-    width: 320px;
-    height: 100vh;
-    overflow-y: auto;
-    padding: 1rem;
-    box-sizing: border-box;
-    font-family: var(--main-font);
-    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.5);
-    display: block; */
+
 }
 
 .task-card {
