@@ -81,36 +81,44 @@
 /* ========== Responsive Styles for Mobile (max-width: 650px) ========== */
 
 @media (max-width: 650px){
-  /* Keep aside-action-button fixed and visible above all content */
-  .aside-action-button{
-    position: fixed;
-    padding-left: 16px;
-    padding-right: 16px;
-    left: 12px;
-    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    z-index: 9999;          /* ensure it's above all other elements */
-    white-space: nowrap;    /* prevent line break for "Tasks verbergen" */
-  }
-  /* Keep new-task-button fixed at the bottom right */
-  .new-task-button{
-    position: fixed;
-    right: 12px;
-    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-    z-index: 9999;
-  }
-
-  /* Standard: App sichtbar */
-.task-container,
+/* weiche Ueberblendung nur fuer die Bereiche, die verschwinden sollen */
+.navbar,
+.task-details,
 .site-footer {
-  transition: opacity .3s ease;
+  transition: opacity .25s ease;
 }
 
-/* Wenn Aside aktiv ist → Rest ausblenden */
-body.aside-open .task-container,
-body.aside-open .site-footer,
-body.aside-open .navbar {
+/* Beim offenen Aside: NUR Hauptbereich/Top/Footer ausblenden.
+   Das Aside (.task-aside) bleibt sichtbar! */
+body.aside-open .navbar,
+body.aside-open .task-details,
+body.aside-open .site-footer {
   opacity: 0;
-  pointer-events: none;  /* Klicks blocken */
+  pointer-events: none;
 }
 
+/* Sicherstellen, dass das Aside ueber dem Rest liegt */
+@media (max-width: 650px){
+  .task-aside{
+    position: fixed;
+    left: 0; right: 0;
+    top: 64px;              /* unter der Navbar (falls die sichtbar bleiben soll, anpassen) */
+    bottom: 88px;           /* Platz fuer die fixen Buttons unten */
+    z-index: 900;
+    background: var(--main-background-color);
+    overflow-y: auto;
+    padding: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  }
+  .task-aside.hidden-mobile{
+    display: none !important;
+  }
+
+  /* Buttons bleiben ganz oben */
+  .aside-action-button,
+  .new-task-button{
+    position: fixed !important;
+    z-index: 1000;
+  }
+}
 }
