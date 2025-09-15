@@ -110,8 +110,10 @@
 @media (min-width: 650px) {
   .task-aside {
     position: relative;
-    top: 0;
-    bottom: 0;
+    top: auto;
+    bottom: auto;
+    height: calc(100vh - 64px - 24px); /* ganze Höhe minus Navbar/Footer Abstand */
+    overflow-y: auto;                  /* Scrollbar aktiv */
     background: transparent;
     box-shadow: none;
     padding: 12px;
