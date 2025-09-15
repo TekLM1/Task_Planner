@@ -77,26 +77,6 @@
 }
 .task-actions button:active{ transform: translateY(1px); }
 
-
-/* ========== Responsive Styles for Mobile (max-width: 650px) ========== */
-
-@media (max-width: 650px){
-/* weiche Ueberblendung nur fuer die Bereiche, die verschwinden sollen */
-.navbar,
-.task-details,
-.site-footer {
-  transition: opacity .25s ease;
-}
-
-/* Beim offenen Aside: NUR Hauptbereich/Top/Footer ausblenden.
-   Das Aside (.task-aside) bleibt sichtbar! */
-body.aside-open .navbar,
-body.aside-open .task-details,
-body.aside-open .site-footer {
-  opacity: 0;
-  pointer-events: none;
-}
-
 /* Sicherstellen, dass das Aside ueber dem Rest liegt */
 @media (max-width: 650px){
   .task-aside{
