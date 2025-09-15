@@ -1,21 +1,20 @@
+/* Task-Sidebar: mobile first, fixiert zwischen Navbar & Buttons */
 .task-aside {
-  /* Mobile First */
   position: fixed;
-  left: 0; 
-  right: 0;
-  top: 64px;              /* unter Navbar */
-  bottom: 88px;           /* Platz für Buttons unten */
-  z-index: 900;
+  left: 0; right: 0;
+  top: 64px;          /* Platz für Navbar */
+  bottom: 88px;       /* Platz für Button-Leiste */
+  z-index: 900;       /* über Content, unter Modals */
   background: var(--main-background-color);
-  overflow-y: auto;
   padding: 12px;
+  overflow-y: auto;   /* Liste scrollbar */
   box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
 
-/* Karten im Aside */
+/* Einzelne Task-Karte */
 .task-card {
   background-color: var(--second-background-color);
-  border-left: 4px solid #3a9efd;
+  border-left: 4px solid #3a9efd; /* farbiger Akzent links */
   border-radius: 6px;
   padding: 0.75rem 1rem;
   margin-bottom: 0.8rem;
@@ -23,36 +22,36 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.3);
   transition: background-color 0.2s, transform 0.2s;
   cursor: default;
-  overflow: hidden;
+  overflow: hidden;   /* Inhalt begrenzen */
 }
 
+/* Hover-Effekt für Karten */
 .task-card:hover {
   background-color: var(--hover-background-color);
   transform: translateY(-1px);
   box-shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
 
-/* Scrollbar modern und unauffällig */
+/* Schlanke Scrollbar (nur WebKit) */
 .task-aside::-webkit-scrollbar { width: 8px; }
 .task-aside::-webkit-scrollbar-thumb {
   background-color: #444;
   border-radius: 4px;
 }
 
-/* Mobile Standard: aside ist sichtbar, wenn aside-open */
-.hidden-mobile { 
-  display: none; 
+/* Utility: mobil ausblenden */
+.hidden-mobile {
+  display: none;
 }
 
-/* Ab Tablet/Desktop sichtbar */
+/* Ab 650px: Sidebar integriert ins Layout */
 @media (min-width: 650px) {
   .hidden-mobile { display: block; }
 
   .task-aside {
-    position: relative;
-    top: auto;
-    bottom: auto;
-    height: calc(100vh - 64px - 24px); /* volle Höhe, scrollt intern */
+    position: relative;          
+    top: auto; bottom: auto;
+    height: calc(100vh - 64px - 24px); /* volle Höhe mit Abständen */
     overflow-y: auto;
     box-shadow: none;
     background: transparent;
