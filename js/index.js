@@ -355,14 +355,10 @@ if (asideToggleBtn) {
     const isHidden = aside.classList.toggle("hidden-mobile");
     asideToggleBtn.textContent = isHidden ? "Tasks anzeigen" : "Tasks verbergen";
 
-    // Body-Status anpassen → Rest ausblenden/einblenden
-    if (!isHidden) {
-      document.body.classList.add("aside-open");
-    } else {
-      document.body.classList.remove("aside-open");
-    }
+    document.body.classList.toggle('aside-open', !isHidden);
   });
 }
+
 
 
   eventsBound = true;
