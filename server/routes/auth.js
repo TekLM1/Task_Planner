@@ -9,7 +9,7 @@ function setCookie(res, user){
   const token = jwt.sign(
     { sub: user._id.toString(), role: user.role, email: user.email, name: user.name },
     process.env.JWT_SECRET,
-    { expiresIn: '7d' }
+    { expiresIn: '1d' }
   );
 
   const prod = process.env.NODE_ENV === 'production';
