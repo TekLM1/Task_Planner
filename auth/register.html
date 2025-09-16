@@ -1,36 +1,43 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Registrieren – Web-LuLa</title>
-  <link rel="stylesheet" href="../variables.css" />
-  <link rel="stylesheet" href="../styles.css" />
-</head>
-<body>
-  <div class="auth-wrap">
-    <h1>Registrieren</h1>
-    <form id="reg-form">
-      <label>Name
-        <input type="text" name="name" required>
-      </label>
-      <label>E-Mail
-        <input type="email" name="email" required>
-      </label>
-      <label>Passwort
-        <input type="password" name="password" required>
-      </label>
-      <label>Rolle
-        <select name="role">
-          <option value="user">Benutzer</option>
-          <option value="supervisor">Vorgesetzter</option>
-        </select>
-      </label>
-      <button type="submit">Konto anlegen</button>
-      <p>Schon Konto? <a href="./login.html">Login</a></p>
-      <p id="err" style="color:#f77"></p>
-    </form>
-  </div>
-  <script src="./auth.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Registrieren – Web-LuLa</title>
+    <link rel="stylesheet" href="../variables.css" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="./auth.css" />
+  </head>
+  <body class="auth-page">
+    <div class="auth-wrap">
+      <h1>Registrieren</h1>
+      <form id="reg-form">
+        <label
+          >Name
+          <input type="text" name="name" required />
+        </label>
+        <label
+          >E-Mail
+          <div class="with-icon mail">
+            <input type="email" name="email" required />
+          </div>
+        </label>
+        <label
+          >Passwort
+          <div class="with-icon lock">
+            <input type="password" name="password" required />
+          </div>
+        </label>
+        <label
+          >Rolle
+          <select name="role">
+            <option value="user">Benutzer</option>
+            <option value="supervisor">Vorgesetzter</option>
+          </select>
+        </label>
+        <button type="submit">Konto anlegen</button>
+        <p>Schon Konto? <a href="./login.html">Login </a></p>
+      </form>
+    </div>
+  </body>
 </html>

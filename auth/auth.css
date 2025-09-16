@@ -1,0 +1,90 @@
+:root{
+  --auth-max-w: 460px;
+  --auth-radius: 18px;
+  --auth-shadow: 0 16px 40px rgba(0,0,0,.32);
+
+  --_bg2: var(--second-background-color, #1f1f1f);
+  --_text: var(--text-color, #e8e8e8);
+  --_accent: var(--accent-color, #5aa9ff);
+
+  --_field-bg: color-mix(in oklab, var(--_bg2) 92%, white 8%);
+  --_field-border: color-mix(in oklab, var(--_text) 12%, transparent);
+  --_field-border-focus: color-mix(in oklab, var(--_accent) 65%, white 35%);
+  --_placeholder: color-mix(in oklab, var(--_text) 45%, transparent);
+  --_muted: color-mix(in oklab, var(--_text) 65%, transparent);
+}
+
+.auth-page .auth-wrap {
+  max-width: 460px;  
+  width: 90%;        
+  margin: 10vh auto;
+  padding: 2rem;
+  background: var(--_bg2);
+  border-radius: var(--auth-radius);
+  box-shadow: var(--auth-shadow);
+}
+
+.auth-page .auth-wrap h1{
+  margin: 0 0 .75rem;
+  font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.auth-page .auth-wrap form{ display:grid; gap:1rem; }
+.auth-page .auth-wrap label{ display:grid; gap:.45rem; font-size:.95rem; color: var(--_muted); }
+
+/* Inputs/Select */
+.auth-page .auth-wrap input,
+.auth-page .auth-wrap select{
+  appearance:none;
+  width:100%;
+  padding:.85rem .95rem;
+  border-radius:12px;
+  border:1px solid var(--_field-border);
+  background: var(--_field-bg);
+  color: var(--_text);
+  outline:none;
+  transition: box-shadow .15s ease, border-color .15s ease, filter .2s ease;
+}
+.auth-page .auth-wrap input::placeholder{ color: var(--_placeholder); }
+
+.auth-page .auth-wrap input:focus,
+.auth-page .auth-wrap select:focus{
+  border-color: var(--_field-border-focus);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--_accent) 22%, transparent);
+}
+
+.auth-page .auth-wrap button{
+  margin-top:.3rem;
+  padding:.95rem 1.1rem;
+  border-radius:999px;
+  border:1px solid var(--_field-border-focus);
+  background: var(--_accent);
+  color: var(--button-text-color, #fff);
+  font-weight:700;
+  cursor:pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  transition: transform .06s ease, filter .15s ease, box-shadow .15s ease;
+}
+.auth-page .auth-wrap button:hover{ filter:brightness(1.03); }
+.auth-page .auth-wrap button:active{ transform:translateY(1px); }
+
+/* Links & Fehler */
+.auth-page .auth-wrap p{ margin:.2rem 0 0; color: var(--_muted); }
+.auth-page .auth-wrap a{ color: var(--_accent); text-underline-offset: 2px; }
+.auth-page #err{ margin-top:.25rem; color:#ff6b6b; }
+
+.auth-page .with-icon{ position:relative; }
+.auth-page .with-icon input{ padding-left:2.6rem; }
+.auth-page .with-icon::before{
+  content:""; position:absolute; left:.8rem; top:50%; transform:translateY(-50%);
+  width:20px; height:20px; opacity:.75; background-repeat:no-repeat; background-size:20px 20px;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.12));
+}
+.auth-page .with-icon.mail::before{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2' opacity='.06'/%3E%3Cpath d='M22 7L12 13 2 7'/%3E%3C/svg%3E");
+}
+.auth-page .with-icon.lock::before{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='10' rx='2' opacity='.06'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");
+}
