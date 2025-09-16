@@ -90,6 +90,13 @@
         </button>
       </div>
     </div>
+    <!-- React (CDN) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel kompiliert JSX im Browser (gut fuers Schul-Setup, fuer Produktion spaeter Vite) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- React-Komponenten NUR fuer die Taskliste -->
+    <script type="text/babel" data-presets="env,react" src="js/react-components.jsx?v=1"></script>
     <script src="js/index.js?v=8" defer></script>
     <script src="auth/auth.js?v=7" defer></script>
   </body>
