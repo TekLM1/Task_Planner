@@ -1,24 +1,19 @@
+/* Mobile-First: Aside ist ein Overlay unter der Navbar und ueber dem Footer-Bereich */
 .task-aside {
-  width: 270px;
-  min-width: 270px;
-  max-height: calc(100vh - 80px);
-  /*height: 100dvh;
-  max-height: 100dvh;*/
-
-  overflow-y: auto;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 64px;              /* unter der Navbar */
+  bottom: 88px;           /* Platz fuer die unteren Buttons */
+  z-index: 900;           /* unter den Buttons (1000) */
+  background: var(--main-background-color);
+  padding: 12px;
+  overflow-y: auto;       /* Liste scrollt intern */
   overflow-x: hidden;
-  /* background-color: var(--main-background-color);
-    color: var(--main-font-color);
-    width: 320px;
-    height: 100vh;
-    overflow-y: auto;
-    padding: 1rem;
-    box-sizing: border-box;
-    font-family: var(--main-font);
-    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.5);
-    display: block; */
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
 
+/* Taskkarten (unveraendert) */
 .task-card {
   background-color: var(--second-background-color);
   border-left: 4px solid #3a9efd;
@@ -31,31 +26,36 @@
   cursor: default;
   overflow: hidden;
 }
-
 .task-card:hover {
   background-color: var(--hover-background-color);
-  transform: translateY(-1px); /* Alternative zu scale */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4); /* Optional schöner Hover */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
 
-/* Scrollbar modern und unauffällig */
-.task-aside::-webkit-scrollbar {
-  width: 8px;
-}
+/* schlanke Scrollbar */
+.task-aside::-webkit-scrollbar { width: 8px; }
+.task-aside::-webkit-scrollbar-thumb { background-color: #444; border-radius: 4px; }
 
-.task-aside::-webkit-scrollbar-thumb {
-  background-color: #444;
-  border-radius: 4px;
-}
+/* auf Mobile standardmaessig verstecken (Button oeffnet) */
+.hidden-mobile { display: none; }
 
-.hidden-mobile {
-  display: none;
-}
-
-
-/* Sobald der Bildschirm größer als 645px ist → sichtbar */
+/* Ab 650px: Aside im Layout integriert (nicht mehr fix) */
 @media (min-width: 650px) {
-  .hidden-mobile {
-    display: block;
+  .hidden-mobile { display: block; }
+
+  .task-aside {
+    position: relative;   /* wieder im Flow */
+    left: auto; right: auto; top: auto; bottom: auto;
+    box-shadow: none;
+    background: transparent;
+
+    /* deine Desktop-Breite hierhin verschieben */
+    width: 270px;
+    min-width: 270px;
+
+    /* volle Hoehe (Viewport - Navbar - etwas Padding), intern scrollen */
+    height: calc(100vh - 64px - 24px);
+    max-height: none;
+    overflow-y: auto;
   }
 }

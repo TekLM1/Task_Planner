@@ -95,6 +95,14 @@
     z-index: 9999;
   }
 
+  body.aside-open .navbar,
+  body.aside-open .task-details,
+  body.aside-open .site-footer{
+    opacity: 0;
+    pointer-events: none;
+  }
+
+
 
 }
 
