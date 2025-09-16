@@ -368,10 +368,7 @@ async function hideWelcome() {
   console.log('[overlay] hideWelcome clicked');
 
   const me = await apiGetMe();
-  if (!me) { 
-    location.href = './auth/login.html'; 
-    return; 
-  }
+  if (!me) { location.href = './auth/login.html'; return; }
 
   await initApp();
 
@@ -383,11 +380,10 @@ async function hideWelcome() {
       overlay.classList.remove('is-open');
       overlay.style.display = 'none';
       overlay.style.opacity = '';
-      sessionStorage.setItem("welcomeSeen", "1");
     }, 400);
   }
 }
-window.hideWelcome = hideWelcome;
+window.hideWelcome = hideWelcome; // fuer onclick im HTML
 
 // Fallback: Event Delegation falls onclick entfernt wird
 document.addEventListener('click', (e) => {
@@ -395,15 +391,4 @@ document.addEventListener('click', (e) => {
   if (!btn) return;
   e.preventDefault();
   hideWelcome();
-});
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  const overlay = document.getElementById("welcome-overlay");
-  if (!overlay) return;
-
-  if (sessionStorage.getItem("welcomeSeen")) {
-    overlay.style.display = "none";
-    return;
-  }
 });
