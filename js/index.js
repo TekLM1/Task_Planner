@@ -368,23 +368,18 @@ async function hideWelcome() {
   console.log('[overlay] hideWelcome clicked');
 
   const me = await apiGetMe();
-  if (!me) {
-    location.href = './auth/login.html';
-    return;
-  }
+  if (!me) { location.href = './auth/login.html'; return; }
 
   await initApp();
 
   const overlay = document.getElementById('welcome-overlay');
-  if (overlay) {
+  if (overlay){
     overlay.style.transition = 'opacity 0.4s ease';
     overlay.style.opacity = '0';
-    setTimeout(() => {
+    setTimeout(()=>{ 
       overlay.classList.remove('is-open');
       overlay.style.display = 'none';
       overlay.style.opacity = '';
-      // Merker setzen: Overlay wurde schon einmal geschlossen
-      localStorage.setItem("welcomeSeen", "1");
     }, 400);
   }
 }
@@ -397,27 +392,3 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   hideWelcome();
 });
-
-// ====== Overlay beim Laden prüfen ======
-document.addEventListener("DOMContentLoaded", async () => {
-  const overlay = document.getElementById("welcome-overlay");
-  if (!overlay) return;
-
-  if (localStorage.getItem("token")) {
-    overlay.style.display = "none";
-
-    const me = await apiGetMe();
-    if (me) {
-      await initApp();
-    } else {
-      localStorage.removeItem("token");
-      location.href = "./auth/login.html";
-    }
-    return;
-  }
-
-  if (localStorage.getItem("welcomeSeen")) {
-    overlay.style.display = "none";
-  }
-});
-
