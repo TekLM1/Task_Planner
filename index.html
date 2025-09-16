@@ -6,7 +6,7 @@
     <title>Task Planner</title>
 
     <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="Favicon.png" type="image/png">
+    <link rel="icon" href="Favicon.png" type="image/png" />
   </head>
   <body>
     <nav class="navbar">
@@ -14,29 +14,39 @@
       <div class="navbar-actions">
         <div class="burger" onclick="toggleMenu()">&#9776;</div>
         <div class="navbar-dropdown" id="burger-menu">
-          <a href="#" class="nav-action-button" id="show-open-tasks">Offene Tasks</a>
-          <a href="#" class="nav-action-button" id="show-done-tasks">Abgeschlossene Tasks</a>
-          <a href="#" class="nav-action-button" id="new-task-button">Neuer Task ➕</a>
-          <a href="#" class="nav-action-button icon-only" id="logout-link" title="Logout" aria-label="Logout">⏻</a>
-
+          <a href="#" class="nav-action-button" id="show-open-tasks"
+            >Offene Tasks</a
+          >
+          <a href="#" class="nav-action-button" id="show-done-tasks"
+            >Abgeschlossene Tasks</a
+          >
+          <a href="#" class="nav-action-button" id="new-task-button"
+            >Neuer Task ➕</a
+          >
+          <a
+            href="#"
+            class="nav-action-button icon-only"
+            id="logout-link"
+            title="Logout"
+            aria-label="Logout"
+            >⏻</a
+          >
         </div>
       </div>
     </nav>
 
     <div class="task-container">
-
       <aside class="task-aside hidden-mobile">
         <div id="task-list"></div>
-    </aside>
+      </aside>
       <main class="task-details">
         <section class="task-info">
-          <h2>[Angewählter Task]
-          </h2>
-          <p><strong>Titel:</strong> </p>
+          <h2>[Angewählter Task]</h2>
+          <p><strong>Titel:</strong></p>
           <p>
             <strong>Beschreibung:</strong>
           </p>
-          <p><strong >Zeit Aufwand:</strong> </p>
+          <p><strong>Zeit Aufwand:</strong></p>
           <p><strong>Verantwortlicher:</strong></p>
           <p><strong>Status:</strong></p>
         </section>
@@ -54,31 +64,33 @@
       </main>
     </div>
     <button class="aside-action-button hidden-desktop">Tasks anzeigen</button>
-    <button class="new-task-button hidden-desktop" onclick="createNewTask()">➕ Neuer Task</button>
+    <button class="new-task-button hidden-desktop" onclick="createNewTask()">
+      ➕ Neuer Task
+    </button>
     <footer class="site-footer">
       <div class="footer-content">
         <span>©Teko LULA</span>
         <span>Disclaimer</span>
         <span>Impressum</span>
         <span class="contact">
-  Kontakt
-  <span class="tooltip">
-    Do not contact us
-  </span>
-  <span class="hover-image">
-    <img src="html/footer/Gotcha.png" alt="Gotcha" />
-  </span>
-</span>
+          Kontakt
+          <span class="tooltip"> Do not contact us </span>
+          <span class="hover-image">
+            <img src="html/footer/Gotcha.png" alt="Gotcha" />
+          </span>
+        </span>
       </div>
     </footer>
     <div id="welcome-overlay">
-  <div class="welcome-content">
-    <img src="web-lula-logo.png" alt="Web-LuLa Logo">
-    <h1>Plan smart.<br><span class="highlight">Web-LuLa.</span></h1>
-    <button id="welcome-start-btn" onclick="hideWelcome()">Let's start planning</button>
-  </div>
-</div>
-<script src="js/index.js?v=8" defer></script>
-<script src="auth/auth.js?v=7" defer></script>
+      <div class="welcome-content">
+        <img src="web-lula-logo.png" alt="Web-LuLa Logo" />
+        <h1>Plan smart.<br /><span class="highlight">Web-LuLa.</span></h1>
+        <button id="welcome-start-btn" onclick="hideWelcome()">
+          Let's start planning
+        </button>
+      </div>
+    </div>
+    <script src="auth/auth.js?v=7" defer></script>
+    <script src="js/index.js?v=8" defer></script>
   </body>
 </html>
