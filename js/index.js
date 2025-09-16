@@ -399,18 +399,25 @@ document.addEventListener('click', (e) => {
 });
 
 // ====== Overlay beim Laden prüfen ======
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const overlay = document.getElementById("welcome-overlay");
   if (!overlay) return;
 
-  // Eingeloggte User -> Overlay gar nicht zeigen
   if (localStorage.getItem("token")) {
     overlay.style.display = "none";
+
+    const me = await apiGetMe();
+    if (me) {
+      await initApp();
+    } else {
+      localStorage.removeItem("token");
+      location.href = "./auth/login.html";
+    }
     return;
   }
 
-  // Falls schon einmal weggeblendet -> nicht mehr anzeigen
   if (localStorage.getItem("welcomeSeen")) {
     overlay.style.display = "none";
   }
 });
+
