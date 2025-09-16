@@ -120,22 +120,27 @@ async function repoDelete(id){
 
 // ====== Rendering ======
 function renderTaskList() {
-  const aside = document.querySelector('.task-aside');
-  const prevScroll = aside ? aside.scrollTop : 0;
+  const taskList = document.getElementById('task-list');
+  if (!taskList) return;
 
-  if (window.ReactUI) {
-    window.ReactUI.renderTaskList({ tasks, selectedTask });
-  } else {
-    // Fallback, falls CDN mal blockiert ist
-    const list = document.getElementById('task-list');
-    if (list) list.textContent = 'Liste wird geladen…';
-  }
+  taskList.innerHTML = '';
 
-  if (aside) aside.scrollTop = prevScroll;
+  const filtered = tasks.filter(t => {
+    if (currentFilter === 'Offen') return t.status === 'Offen';
+    if (currentFilter === 'Erledigt') return t.status === 'Erledigt';
+    return true;
+  });
+
+  filtered.forEach(task => {
+    const card = document.createElement('div');
+    card.className = 'task-card';
+    card.textContent = `📝 ${task.titel || '(Unbenannter Task)'}`;
+    card.dataset.id = task.id;
+    card.addEventListener('click', () => showTaskDetail(task));
+    if (selectedTask && selectedTask.id === task.id) card.classList.add('active');
+    taskList.appendChild(card);
+  });
 }
-
-// NACH der Definition von showTaskDetail einmalig:
-window.showTaskDetail = showTaskDetail;
 
 function renderTaskFields(task, editable) {
   const verantwortlicherControl = editable
